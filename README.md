@@ -1,70 +1,19 @@
-# Getting Started with Create React App
+# NeighBoards
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a work in progress :) 
 
-## Available Scripts
+Neighboards is a web-based project management tool that allows teams to manage their projects and collaborate more effectively. Inspired by AzureBoards, Neighboards is designed to be intuitive and easy-to-use, while providing all the features needed for effective project management.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Kanban board: Track the status of your project tasks using a kanban board. Move tasks between different stages of completion, assign tasks to team members, and add comments and attachments to each task.
+- Backlog: Create and prioritize a backlog of tasks that are not yet in progress. Easily move tasks from the backlog to the kanban board when they are ready to be worked on.
+- Sprint planning: Plan and track your project sprints using the sprint planning tool. Define sprint goals, estimate effort, and assign tasks to team members.
+- Reporting: Generate reports on your project progress and performance. See how much work has been completed, how much work remains, and how long it's taking to complete each task.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technology stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+NeighBoards is built using the following technologies:
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- React: A JavaScript library for building user interfaces
+- Firebase ( soon! ) : noSQL database
