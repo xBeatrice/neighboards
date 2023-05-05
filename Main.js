@@ -7,6 +7,7 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
+import TaskDialog from "./TaskDialog.js";
 import {
   Table,
   TableBody,
@@ -20,19 +21,30 @@ import {
   CardActionArea,
   Divider,
 } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function Main() {
   const [expanded, setExpanded] = React.useState([]);
-  //const [selected, setSelected] = React.useState([]);
+
+  const [taskDialog, setTaskDialog] = React.useState(false);
+
+  const [selectedTask, setSelectedTask] = React.useState(null);
+
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+  };
+
+  const handleClickOpen = () => {
+    setTaskDialog(true);
+  };
+
+  const handleClose = () => {
+    setTaskDialog(false);
+  };
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
   };
-
-  // const handleSelect = (event, nodeIds) => {
-  //   setSelected(nodeIds);
-  // };
 
   const treeview = useRef(null);
 
@@ -54,13 +66,6 @@ export default function Main() {
       oldExpanded.length === 0 ? childrenNodeIds : []
     );
   };
-
-  // const handleSelectClick = () => {
-  //   const childrenNodeIds = getChildrenNodeIds();
-  //   setSelected((oldSelected) =>
-  //     oldSelected.length === 0 ? childrenNodeIds : []
-  //   );
-  // };
 
   const users = [
     { id: "123", name: "maria" },
@@ -138,16 +143,6 @@ export default function Main() {
     borderLeft: "4px solid white",
     borderRight: "4px solid white",
   };
-  const columns = [
-    { field: "notStarted", headerName: "Not Started", width: 130 },
-    { field: "active", headerName: "Active", width: 130 },
-    { field: "codeReview", headerName: "Code Review", width: 130 },
-    { field: "readyForTest", headerName: "Ready For Test", width: 130 },
-    { field: "testing", headerName: "Testing", width: 130 },
-    { field: "closed", headerName: "Closed", width: 130 },
-  ];
-
-  //let stateValue=''
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -186,9 +181,7 @@ export default function Main() {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         expanded={expanded}
-        //selected={selected}
         onNodeToggle={handleToggle}
-        //onNodeSelect={handleSelect}
         multiSelect
       >
         {taskBoard.map((user, i) => (
@@ -242,6 +235,10 @@ export default function Main() {
                               my: 1,
                               width: 200,
                               display: "flex",
+                            }}
+                            onClick={() => {
+                              handleClickOpen();
+                              handleTaskClick(cell);
                             }}
                           >
                             <Divider
@@ -325,115 +322,14 @@ export default function Main() {
               </TableBody>
             </Table>
           </TreeItem>
-        ))}{" "}
-        {/* {users.map((user, i) => (
-          <TreeItem
-            sx={{ mt: 1, backgroundColor: "#e6e6e6" }}
-            label={
-              <div>
-                <Typography style={treeViewStyle} variant="h5" my={2}>
-                  {" "}
-                  <Avatar
-                    src="./user.svg"
-                    sx={{ mt: 1, mr: 1, mb: 1, bgcolor: "#0079bf" }}
-                  />
-                  {user.name}
-                </Typography>{" "}
-              </div>
-            }
-            nodeId={i.toString()}
-            key={i}
-          >
-            {tasks
-              .filter((task) => task.userId === user.id)
-              .map((task, taskIndex) => (
-                <TreeItem
-                  sx={{ ml: 10.5 }}
-                  label={
-                    <Card
-                      taskstate={task.state}
-                      className={"cardref"}
-                      sx={{
-                        my: 1,
-                        width: 200,
-                        display: "flex",
-                      }}
-                    >
-                      <Divider
-                        variant="fullWidth"
-                        orientation="vertical"
-                        sx={{
-                          height: 240,
-                          bgcolor: "#f0bc34",
-                          width: 4,
-                        }}
-                      />
-                      <CardActionArea>
-                        <CardContent>
-                          <Typography variant="h6">
-                            <img
-                              alt="clipboard"
-                              src={Clipboard}
-                              height="25px"
-                              width="25px"
-                              bgcolor="#f0bc34"
-                              sx={{ mr: 2 }}
-                            />
-                            {task.title}
-                          </Typography>
-                          <Typography
-                            style={treeViewStyle}
-                            variant="subtitle1"
-                            my={2}
-                          >
-                            <Avatar
-                              src="./user.svg"
-                              sx={{
-                                mt: 1,
-                                mr: 1,
-                                mb: 1,
-                                height: 30,
-                                width: 30,
-                                bgcolor: "#0079bf",
-                              }}
-                            />
-                            {user.name}
-                          </Typography>
-                          <Typography variant="body1" color="gray">
-                            State: {task.state}
-                          </Typography>
-                          <Typography variant="body1" color="gray">
-                            Due date:
-                          </Typography>
-                          <Typography variant="body1" color="gray">
-                            Area Path:
-                          </Typography>
-                          <Typography variant="body1" color="gray">
-                            Iteration:
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  }
-                  nodeId={i + "-" + taskIndex}
-                  key={i + "-" + taskIndex}
-                />
-              ))}
-          </TreeItem> */}
-        {/* ))} */}
+        ))}
       </TreeView>
+      <TaskDialog
+        handleClickOpen={handleClickOpen}
+        handleClose={handleClose}
+        taskDialog={taskDialog}
+        selectedTask={selectedTask}
+      />
     </Box>
   );
 }
-// const getCards = () => {
-//   const allCards = document.getElementsByClassName("cardref");
-
-//   for (let i = 0; i < allCards.length; i++) {
-//     if (allCards[i].taskstate === "active") {
-//       let correctCellId = allCards[i].taskstate + i;
-//       const correctCell = document.getElementById(correctCellId);
-//       correctCell.appendChild(allCards[i]);
-//     }
-//   }
-// };
-// setTimeout(getCards, 2000);
