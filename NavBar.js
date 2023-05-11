@@ -13,6 +13,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
+import { users } from "./mocks/usersMock.js";
 //import NestedList from "./NestedList.js";
 
 function NavBar(props) {
@@ -22,11 +23,6 @@ function NavBar(props) {
     setValue(newValue);
   };
 
-  const [person, setPerson] = React.useState("");
-
-  const handleChangePerson = (event) => {
-    setPerson(event.target.value);
-  };
   const container = {
     display: "flex",
   };
@@ -65,14 +61,15 @@ function NavBar(props) {
           <Select
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
-            value={person}
+            value={props.person}
             label="Person"
             defaultValue="Person"
-            onChange={handleChangePerson}
+            onChange={props.handleChangePerson}
           >
-            <MenuItem value={1}>Person 1</MenuItem>
-            <MenuItem value={2}>Person 2</MenuItem>
-            <MenuItem value={3}>Person 3</MenuItem>
+            {users.map((u) => (
+              <MenuItem value={u.name}>{u.name}</MenuItem>
+            ))}
+            <MenuItem value={"all"}> All </MenuItem>
           </Select>
         </FormControl>
       </Box>

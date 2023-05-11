@@ -15,15 +15,22 @@ function App() {
   const handleChangeIteration = (event) => {
     setIteration(event.target.value);
   };
+  const [person, setPerson] = React.useState("");
+
+  const handleChangePerson = (event) => {
+    setPerson(event.target.value);
+  };
 
   return (
     <div>
       <Header />
       <NavBar
+        person={person}
+        handleChangePerson={handleChangePerson}
         iteration={iteration}
         handleChangeIteration={handleChangeIteration}
       />
-      <Main iteration={iteration} />
+      <Main person={person} iteration={iteration} />
     </div>
   );
 }

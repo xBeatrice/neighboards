@@ -9,6 +9,7 @@ import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import TaskDialog from "./TaskDialog.js";
 import { tasks } from "./mocks/taskBoardMock.js";
+import { users } from "./mocks/usersMock.js";
 import {
   Table,
   TableBody,
@@ -72,11 +73,6 @@ export default function Main(props) {
     );
   };
 
-  const users = [
-    { id: "123", name: "maria" },
-    { id: "345", name: "ioana" },
-  ];
-
   const states = [
     "notStarted",
     "active",
@@ -120,11 +116,28 @@ export default function Main(props) {
     setCurrentTaskBoard(taskBoard);
   }, []);
 
+  // React.useEffect(() => {
+  //   // Filter the taskBoard based on the new props.iteration value
+
+  //   //const taskBoard = [...currentTaskBoard];
+  //   let taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
+
+  //   if (props.person && props.person !== "all") {
+  //     taskBoard = taskBoard.filter((user) => user.name == props.person);
+  //   }
+  //   // Update the state with the filtered taskBoard
+  //   setFilteredTaskBoard(taskBoard);
+  // }, [props.person, currentTaskBoard]);
+
   React.useEffect(() => {
     // Filter the taskBoard based on the new props.iteration value
 
     //const taskBoard = [...currentTaskBoard];
-    const taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
+    let taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
+
+    if (props.person && props.person !== "all") {
+      taskBoard = taskBoard.filter((user) => user.name == props.person);
+    }
 
     for (let i = 0; i < taskBoard.length; i++) {
       for (let j = 0; j < taskBoard[i].result.length; j++) {
@@ -145,7 +158,7 @@ export default function Main(props) {
 
     // Update the state with the filtered taskBoard
     setFilteredTaskBoard(taskBoard);
-  }, [props.iteration, currentTaskBoard]);
+  }, [props.iteration, props.person, currentTaskBoard]);
 
   const treeViewStyle = {
     display: "flex",
