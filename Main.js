@@ -8,6 +8,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import TaskDialog from "./TaskDialog.js";
+import { tasks } from "./mocks/taskBoardMock.js";
 import {
   Table,
   TableBody,
@@ -21,14 +22,18 @@ import {
   CardActionArea,
   Divider,
 } from "@mui/material";
-import { useRef, useState } from "react";
-// test
-export default function Main() {
+import { useRef } from "react";
+
+export default function Main(props) {
   const [expanded, setExpanded] = React.useState([]);
 
   const [taskDialog, setTaskDialog] = React.useState(false);
 
-  const [selectedTask, setSelectedTask] = React.useState(null);
+  const [selectedTask, setSelectedTask] = React.useState(false);
+
+  const [currentTaskBoard, setCurrentTaskBoard] = React.useState([]);
+
+  const [filteredTaskBoard, setFilteredTaskBoard] = React.useState([]);
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
@@ -72,14 +77,6 @@ export default function Main() {
     { id: "345", name: "ioana" },
   ];
 
-  const tasks = [
-    // reactiv
-    { title: "aaaa", userId: "123", state: "active", isBug: false },
-    { title: "bbb", userId: "123", state: "active", isBug: true },
-    { title: "yyy", userId: "345", state: "codeReview", isBug: false },
-    { title: "nnnn", userId: "123", state: "testing", isBug: true },
-  ];
-
   const states = [
     "notStarted",
     "active",
@@ -89,50 +86,66 @@ export default function Main() {
     "closed",
   ];
 
-  const taskBoardMock = {
-    users: [
-      {
-        id: "123",
-        name: "maria",
-        tasks: [
-          [
-            {},
-            { title: "aaaa", userId: "123", state: "active" },
-            { title: "yyy", userId: "345", state: "codeReview" },
-            {},
-            { title: "nnnn", userId: "123", state: "testing" },
-            {},
-          ],
-          [{}, {}, {}, {}, {}, {}],
-          [{}, {}, {}, {}, {}, {}],
-        ],
-      },
-    ],
-  };
+  React.useEffect(() => {
+    const taskBoard = users.map((user) => {
+      var userTasks = tasks.filter((task) => task.userId === user.id);
 
-  const taskBoard = users.map((user) => {
-    var userTasks = tasks.filter((task) => task.userId === user.id);
+      let result = [[], [], [], [], [], [], [], [], [], []];
 
-    let result = [[], [], [], [], [], [], [], [], [], []];
-
-    userTasks.forEach((t) => {
-      for (let i = 0; i < states.length; i++) {
-        if (t.state === states[i]) {
-          let index = 0;
-          while (result[index][i]) {
-            index++;
+      userTasks.forEach((t) => {
+        for (let i = 0; i < states.length; i++) {
+          if (t.state === states[i]) {
+            let index = 0;
+            while (result[index][i]) {
+              index++;
+            }
+            result[index][i] = {
+              title: t.title,
+              state: t.state,
+              isBug: t.isBug,
+              iteration: t.iteration,
+            };
+            result[index].length = 6;
           }
-          result[index][i] = { title: t.title, state: t.state, isBug: t.isBug };
-          result[index].length = 6;
         }
+      });
+
+      for (let i = 0; i < result.length; i++) {
+        result[i] = [...result[i]];
       }
+
+      return { ...user, result };
     });
 
-    for (let i = 0; i < result.length; i++) {
-      result[i] = [...result[i]];
+    setCurrentTaskBoard(taskBoard);
+  }, []);
+
+  React.useEffect(() => {
+    // Filter the taskBoard based on the new props.iteration value
+
+    //const taskBoard = [...currentTaskBoard];
+    const taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
+
+    for (let i = 0; i < taskBoard.length; i++) {
+      for (let j = 0; j < taskBoard[i].result.length; j++) {
+        for (let k = 0; k < taskBoard[i].result[j].length; k++) {
+          if (
+            props.iteration &&
+            taskBoard[i].result[j][k] &&
+            taskBoard[i].result[j][k].iteration != props.iteration
+          ) {
+            taskBoard[i].result[j][k] = undefined;
+          }
+        }
+      }
+      taskBoard[i].result = taskBoard[i].result.filter((row) =>
+        row.some((task) => task)
+      );
     }
-    return { ...user, result };
-  });
+
+    // Update the state with the filtered taskBoard
+    setFilteredTaskBoard(taskBoard);
+  }, [props.iteration, currentTaskBoard]);
 
   const treeViewStyle = {
     display: "flex",
@@ -184,7 +197,7 @@ export default function Main() {
         onNodeToggle={handleToggle}
         multiSelect
       >
-        {taskBoard.map((user, i) => (
+        {filteredTaskBoard.map((user, i) => (
           <TreeItem
             sx={{ mt: 1, backgroundColor: "#e6e6e6" }}
             label={
@@ -214,7 +227,7 @@ export default function Main() {
                     }}
                   >
                     {value.map((cell, k) =>
-                      cell === undefined ? (
+                      !cell ? (
                         <TableCell
                           key={k + "empty"}
                           sx={{

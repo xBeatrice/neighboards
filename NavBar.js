@@ -15,17 +15,13 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 //import NestedList from "./NestedList.js";
 
-function NavBar() {
+function NavBar(props) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const [iteration, setIteration] = React.useState("");
 
-  const handleChangeIteration = (event) => {
-    setIteration(event.target.value);
-  };
   const [person, setPerson] = React.useState("");
 
   const handleChangePerson = (event) => {
@@ -52,10 +48,10 @@ function NavBar() {
           <Select
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
-            value={iteration}
+            value={props.iteration}
             label="Iteration"
             defaultValue="Iteration"
-            onChange={handleChangeIteration}
+            onChange={props.handleChangeIteration}
           >
             <MenuItem value={1}>Iteration 1</MenuItem>
             <MenuItem value={2}>Iteration 2</MenuItem>
