@@ -144,6 +144,7 @@ export default function Main(props) {
         for (let k = 0; k < taskBoard[i].result[j].length; k++) {
           if (
             props.iteration &&
+            props.iteration !== "all" &&
             taskBoard[i].result[j][k] &&
             taskBoard[i].result[j][k].iteration != props.iteration
           ) {

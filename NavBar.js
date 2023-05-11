@@ -14,6 +14,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import { users } from "./mocks/usersMock.js";
+import { tasks } from "./mocks/taskBoardMock.js";
 //import NestedList from "./NestedList.js";
 
 function NavBar(props) {
@@ -26,6 +27,11 @@ function NavBar(props) {
   const container = {
     display: "flex",
   };
+
+  let tasksIterations = [];
+  tasks.map((t) => tasksIterations.push(t.iteration));
+  let iterations = [...new Set(tasksIterations)];
+
   return (
     <div style={container}>
       <Tabs
@@ -49,9 +55,10 @@ function NavBar(props) {
             defaultValue="Iteration"
             onChange={props.handleChangeIteration}
           >
-            <MenuItem value={1}>Iteration 1</MenuItem>
-            <MenuItem value={2}>Iteration 2</MenuItem>
-            <MenuItem value={3}>Iteration 3</MenuItem>
+            {iterations.map((i) => (
+              <MenuItem value={i}>{i}</MenuItem>
+            ))}
+            <MenuItem value={"all"}>{"all"}</MenuItem>
           </Select>
         </FormControl>
       </Box>
