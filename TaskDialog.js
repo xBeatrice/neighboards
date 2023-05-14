@@ -10,21 +10,24 @@ import {
   Card,
   CardContent,
   TextField,
+  MenuItem,
 } from "@mui/material";
-
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Textarea from "@mui/joy/Textarea";
 import Menu from "@mui/joy/Menu";
-import MenuItem from "@mui/joy/MenuItem";
+//import MenuItem from "@mui/joy/MenuItem";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import FormatBold from "@mui/icons-material/FormatBold";
 import FormatItalic from "@mui/icons-material/FormatItalic";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Check from "@mui/icons-material/Check";
-
+import { states } from "./constants/states.js";
+import { iterations } from "./helpers/iterations.js";
+import { users } from "./mocks/usersMock.js";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -33,18 +36,39 @@ function TaskDialog(props) {
   const [italic, setItalic] = React.useState(false);
   const [fontWeight, setFontWeight] = React.useState("normal");
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [text, setText] = React.useState("");
+
+  const defaultTask = { state: "Active" };
+
+  const [currentTask, setCurrentTask] = React.useState(defaultTask);
 
   const textareaRef = React.useRef(null);
 
-  function handleSubmit() {
-    const inputValue = textareaRef.current.firstChild.value;
-    setText(inputValue);
-  }
+  React.useEffect(() => {
+    if (props.selectedTask) {
+      setCurrentTask(JSON.parse(JSON.stringify(props.selectedTask)));
+    } else {
+      setCurrentTask(defaultTask);
+    }
+  }, [props.selectedTask]);
+
+  const handleTaskChange = (event) => {
+    // name = key
+    const { name, value } = event.target;
+
+    setCurrentTask((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    props.submit(currentTask);
+  };
+
   return (
     <Dialog
       fullScreen
-      open={props.taskDialog}
+      open={props.isOpen}
       onClose={props.handleClose}
       TransitionComponent={Transition}
     >
@@ -52,7 +76,11 @@ function TaskDialog(props) {
         <AppBar
           sx={{
             position: "relative",
-            backgroundColor: props.selectedTask.isBug ? "#ff4f9b" : "#f0b924",
+            backgroundColor: currentTask
+              ? currentTask.isBug
+                ? "#ff4f9b"
+                : "#f0b924"
+              : "#1976d2",
           }}
         >
           <Toolbar>
@@ -65,67 +93,129 @@ function TaskDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h3" sx={{ mx: 1, my: 2 }}>
-              {" "}
-              {props.selectedTask.title ? props.selectedTask.title : ""}
+              {currentTask.title ? (
+                currentTask.title
+              ) : (
+                <Box sx={{ display: "flex", padding: 1, height: 46 }}>
+                  {" "}
+                  <Textarea minRows={2} placeholder="Enter task title" />{" "}
+                </Box>
+              )}
             </Typography>
           </Toolbar>
         </AppBar>
         <Card
           sx={{
             width: "96%",
+            height: 480,
             my: 2,
             mx: 2,
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)",
           }}
         >
-          <CardContent sx={{ display: "flex", padding: 2, mt: 1 }}>
+          <CardContent sx={{ display: "flex" }}>
             <Box sx={{ minWidth: 700 }}>
-              <Typography variant="subtitle1" sx={{ mx: 2, my: 1 }}>
-                {" "}
-                State:{" "}
-                {props.selectedTask.state ? props.selectedTask.state : ""}
-              </Typography>
-              <Typography variant="subtitle1" sx={{ mx: 2, my: 1 }}>
-                {" "}
-                Due date:{" "}
-                {props.selectedTask.title ? props.selectedTask.title : ""}
-              </Typography>
-              <Typography variant="subtitle1" sx={{ mx: 2, my: 1 }}>
-                {" "}
-                Area path:{" "}
-                {props.selectedTask.title ? props.selectedTask.title : ""}
-              </Typography>
-              <Typography variant="subtitle1" sx={{ mx: 2, my: 1 }}>
-                {" "}
-                Iteration:{" "}
-                {props.selectedTask.title ? props.selectedTask.title : ""}
-              </Typography>
-              <Card
-                sx={{
-                  width: "100",
-                  mx: 1,
-                  mb: 1,
-                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)",
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ mx: 2, my: 1, height: 100 }}
+              <Box>
+                <Box>
+                  <TextField
+                    sx={{ width: 200, height: 60, mx: 2 }}
+                    id="outlined"
+                    select
+                    label="State"
+                    value={currentTask.state}
+                    name="state"
+                    onChange={handleTaskChange}
                   >
-                    {" "}
-                    Description:{" "}
-                    {props.selectedTask.title ? props.selectedTask.title : ""}
-                  </Typography>
-                </CardContent>
-              </Card>
+                    {states.map((s) => (
+                      <MenuItem key={s} value={s}>
+                        {s}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Box>
+              </Box>
+
+              <Typography variant="subtitle1" sx={{ mx: 2, mt: 1 }}>
+                <DatePicker
+                  sx={{ width: 200, my: 1 }}
+                  value={currentTask.dueDate}
+                  label="Due date"
+                  // onChange={(newValue) => setValue(newValue)}
+                />
+              </Typography>
+              <Typography variant="subtitle1" sx={{ mx: 2, mt: 1 }}>
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="Area path"
+                  multiline
+                  maxRows={4}
+                  sx={{ width: 200, my: 1 }}
+                />
+              </Typography>
+              <Typography variant="subtitle1" sx={{ mx: 2, mt: 1 }}>
+                <FormControl>
+                  <TextField
+                    select
+                    sx={{ width: 200, mt: 1 }}
+                    value={currentTask.iteration}
+                    name="iteration"
+                    label="Iteration"
+                    onChange={handleTaskChange}
+                  >
+                    {iterations.map((i) => (
+                      <MenuItem value={i}>Iteration {i}</MenuItem>
+                    ))}
+                  </TextField>
+                </FormControl>
+              </Typography>
+              <Box sx={{ display: "flex" }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ mx: 2, my: 1, height: 100 }}
+                >
+                  <TextField
+                    sx={{ width: 550, mt: 1 }}
+                    id="outlined-multiline-static"
+                    label="Description"
+                    multiline
+                    rows={4}
+                  />
+                </Typography>
+                <Button
+                  sx={{
+                    height: 60,
+                    width: 80,
+                    mt: 6,
+                  }}
+                  onClick={handleSubmit}
+                >
+                  {currentTask.title ? "EDIT" : "SAVE"}
+                </Button>
+              </Box>
             </Box>
-            <Box sx={{ ml: "auto", mr: 1, my: 1, display: "grid" }}>
+            <Box sx={{ ml: "auto", mr: 1, my: 1 }}>
               <Typography sx={{ mb: 0.5 }}>Hours Completed:</Typography>
               <TextField sx={{ mb: 0.5 }} />
               <Typography sx={{ mb: 0.5 }}>Hours Remaining:</Typography>
               <TextField sx={{ mb: 0.5 }} />
-              <Button>Save</Button>
+              <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
+                <FormControl>
+                  <TextField
+                    select
+                    sx={{ width: 220, mt: 1 }}
+                    name="userId"
+                    value={currentTask.userId}
+                    label="Task asignment"
+                    onChange={handleTaskChange}
+                  >
+                    {users.map((u) => (
+                      <MenuItem key={u.id} value={u.id}>
+                        {u.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </FormControl>
+              </Typography>
             </Box>
           </CardContent>
         </Card>
@@ -205,7 +295,7 @@ function TaskDialog(props) {
               </Box>
             }
             sx={{
-              border: props.selectedTask.isBug
+              border: currentTask.isBug
                 ? "2px solid #ff4f9b"
                 : "2px solid #f0b924",
               minWidth: 300,
@@ -218,7 +308,7 @@ function TaskDialog(props) {
         <Card variant="outlined" sx={{ width: 700, my: 2, ml: 2 }}>
           <CardContent>
             <Typography sx={{ fontSize: 18 }} gutterBottom>
-              {text}{" "}
+              {" "}
             </Typography>
           </CardContent>
         </Card>

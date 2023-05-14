@@ -8,8 +8,9 @@ import TreeItem from "@mui/lab/TreeItem";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import TaskDialog from "./TaskDialog.js";
-import { tasks } from "./mocks/taskBoardMock.js";
+import { tasks as tasksMock } from "./mocks/taskBoardMock.js";
 import { users } from "./mocks/usersMock.js";
+import { states } from "./constants/states.js";
 import {
   Table,
   TableBody,
@@ -28,24 +29,39 @@ import { useRef } from "react";
 export default function Main(props) {
   const [expanded, setExpanded] = React.useState([]);
 
-  const [taskDialog, setTaskDialog] = React.useState(false);
+  const [tasks, setTasks] = React.useState(tasksMock);
 
-  const [selectedTask, setSelectedTask] = React.useState(false);
+  const [taskDialogOptions, setTaskDialogOptions] = React.useState({
+    isOpen: false,
+  });
 
   const [currentTaskBoard, setCurrentTaskBoard] = React.useState([]);
 
   const [filteredTaskBoard, setFilteredTaskBoard] = React.useState([]);
 
+  const handleSaveTask = (updatedTask) => {
+    setTasks((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === updatedTask.id) {
+          return updatedTask;
+        } else {
+          return item;
+        }
+      })
+    );
+    handleTaskClick(null);
+  };
+
+  const handleCloseDialog = () => {
+    setTaskDialogOptions({ ...taskDialogOptions, isOpen: false });
+  };
+
   const handleTaskClick = (task) => {
-    setSelectedTask(task);
-  };
-
-  const handleClickOpen = () => {
-    setTaskDialog(true);
-  };
-
-  const handleClose = () => {
-    setTaskDialog(false);
+    setTaskDialogOptions({
+      ...taskDialogOptions,
+      isOpen: !!task,
+      selectedTask: task,
+    });
   };
 
   const handleToggle = (event, nodeIds) => {
@@ -73,15 +89,6 @@ export default function Main(props) {
     );
   };
 
-  const states = [
-    "notStarted",
-    "active",
-    "codeReview",
-    "readyForTest",
-    "testing",
-    "closed",
-  ];
-
   React.useEffect(() => {
     const taskBoard = users.map((user) => {
       var userTasks = tasks.filter((task) => task.userId === user.id);
@@ -96,10 +103,7 @@ export default function Main(props) {
               index++;
             }
             result[index][i] = {
-              title: t.title,
-              state: t.state,
-              isBug: t.isBug,
-              iteration: t.iteration,
+              ...t,
             };
             result[index].length = 6;
           }
@@ -114,25 +118,9 @@ export default function Main(props) {
     });
 
     setCurrentTaskBoard(taskBoard);
-  }, []);
-
-  // React.useEffect(() => {
-  //   // Filter the taskBoard based on the new props.iteration value
-
-  //   //const taskBoard = [...currentTaskBoard];
-  //   let taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
-
-  //   if (props.person && props.person !== "all") {
-  //     taskBoard = taskBoard.filter((user) => user.name == props.person);
-  //   }
-  //   // Update the state with the filtered taskBoard
-  //   setFilteredTaskBoard(taskBoard);
-  // }, [props.person, currentTaskBoard]);
+  }, [tasks]);
 
   React.useEffect(() => {
-    // Filter the taskBoard based on the new props.iteration value
-
-    //const taskBoard = [...currentTaskBoard];
     let taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
 
     if (props.person && props.person !== "all") {
@@ -223,6 +211,19 @@ export default function Main(props) {
                     sx={{ mt: 1, mr: 1, mb: 1, bgcolor: "#0079bf" }}
                   />
                   {user.name}
+                  <Button
+                    variant="contained"
+                    onClick={(event) => {
+                      event.stopPropagation(); // prevent the click event from propagating to the TreeItem
+                      // handleNewTask(user); // handle the click event for the button
+                    }}
+                    sx={{
+                      mr: 2,
+                      ml: "auto",
+                    }}
+                  >
+                    Add new task
+                  </Button>
                 </Typography>{" "}
               </div>
             }
@@ -264,7 +265,6 @@ export default function Main(props) {
                               display: "flex",
                             }}
                             onClick={() => {
-                              handleClickOpen();
                               handleTaskClick(cell);
                             }}
                           >
@@ -352,10 +352,10 @@ export default function Main(props) {
         ))}
       </TreeView>
       <TaskDialog
-        handleClickOpen={handleClickOpen}
-        handleClose={handleClose}
-        taskDialog={taskDialog}
-        selectedTask={selectedTask}
+        isOpen={taskDialogOptions.isOpen}
+        handleClose={handleCloseDialog}
+        selectedTask={taskDialogOptions.selectedTask}
+        submit={handleSaveTask}
       />
     </Box>
   );

@@ -3,8 +3,10 @@ import React from "react";
 import Header from "./Header.js";
 import NavBar from "./NavBar.js";
 import Main from "./Main.js";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-function App() {
+function App({ children }) {
   // const [chosenIteration, setChosenIteration]=React.useState([])
 
   // const handleChosenIteration = (taskBoard) => {
@@ -22,16 +24,18 @@ function App() {
   };
 
   return (
-    <div>
-      <Header />
-      <NavBar
-        person={person}
-        handleChangePerson={handleChangePerson}
-        iteration={iteration}
-        handleChangeIteration={handleChangeIteration}
-      />
-      <Main person={person} iteration={iteration} />
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div>
+        <Header />
+        <NavBar
+          person={person}
+          handleChangePerson={handleChangePerson}
+          iteration={iteration}
+          handleChangeIteration={handleChangeIteration}
+        />
+        <Main person={person} iteration={iteration} />
+      </div>
+    </LocalizationProvider>
   );
 }
 
