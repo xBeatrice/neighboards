@@ -17,28 +17,20 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Textarea from "@mui/joy/Textarea";
-import Menu from "@mui/joy/Menu";
-//import MenuItem from "@mui/joy/MenuItem";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import FormatBold from "@mui/icons-material/FormatBold";
-import FormatItalic from "@mui/icons-material/FormatItalic";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import Check from "@mui/icons-material/Check";
+
 import { states } from "./constants/states.js";
 import { iterations } from "./helpers/iterations.js";
 import { users } from "./mocks/usersMock.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import CommentArea from "./CommentArea.js";
+import Comment from "./Comment.js";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function TaskDialog(props) {
-  const [italic, setItalic] = React.useState(false);
-  const [fontWeight, setFontWeight] = React.useState("normal");
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [checked, setChecked] = React.useState(true);
 
   const handleCheck = () => {
@@ -49,7 +41,17 @@ function TaskDialog(props) {
 
   const [currentTask, setCurrentTask] = React.useState(defaultTask);
 
-  const textareaRef = React.useRef(null);
+  const handleSaveTask = (updatedTask) => {
+    props.setTasks((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === updatedTask.id) {
+          return updatedTask;
+        } else {
+          return item;
+        }
+      })
+    );
+  };
 
   React.useEffect(() => {
     if (props.selectedTask) {
@@ -266,99 +268,13 @@ function TaskDialog(props) {
             </Box>
           </CardContent>
         </Card>
-
-        <FormControl
-          sx={{
-            mt: 4,
-            ml: 2,
-            width: 700,
-            padding: 1,
-            borderRadius: 10,
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)",
-          }}
-        >
-          <FormLabel sx={{ padding: 2 }}>Comment Here! </FormLabel>
-          <Textarea
-            ref={textareaRef}
-            placeholder="Type something here…"
-            minRows={6}
-            endDecorator={
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: "var(--Textarea-paddingBlock)",
-                  pt: "var(--Textarea-paddingBlock)",
-                  borderTop: "1px solid",
-                  borderColor: "divider",
-                  flex: "auto",
-                }}
-              >
-                <IconButton
-                  variant="plain"
-                  color="neutral"
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                >
-                  <FormatBold />
-                  <KeyboardArrowDown fontSize="md" />
-                </IconButton>
-                {anchorEl && (
-                  <Menu
-                    open={!!anchorEl}
-                    onClose={() => setAnchorEl(null)}
-                    size="sm"
-                    placement="bottom-start"
-                    sx={{ "--ListItemDecorator-size": "24px", zIndex: "9999" }}
-                    anchorEl={anchorEl}
-                  >
-                    {["200", "normal", "bold"].map((weight) => (
-                      <MenuItem
-                        key={weight}
-                        selected={fontWeight === weight}
-                        onClick={() => {
-                          setFontWeight(weight);
-                          setAnchorEl(null);
-                        }}
-                        sx={{ fontWeight: weight }}
-                      >
-                        <ListItemDecorator>
-                          {fontWeight === weight && <Check fontSize="sm" />}
-                        </ListItemDecorator>
-                        {weight === "200" ? "lighter" : weight}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                )}
-                <IconButton
-                  variant={italic ? "soft" : "plain"}
-                  color={italic ? "primary" : "neutral"}
-                  aria-pressed={italic}
-                  onClick={() => setItalic((bool) => !bool)}
-                >
-                  <FormatItalic />
-                </IconButton>
-                <Button onClick={handleSubmit} sx={{ ml: "auto" }}>
-                  Post
-                </Button>
-              </Box>
-            }
-            sx={{
-              border: currentTask.isBug
-                ? "2px solid #ff4f9b"
-                : "2px solid #f0b924",
-              minWidth: 300,
-              fontWeight,
-              fontStyle: italic ? "italic" : "initial",
-            }}
-          />
-        </FormControl>
-
-        <Card variant="outlined" sx={{ width: 700, my: 2, ml: 2 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 18 }} gutterBottom>
-              {" "}
-            </Typography>
-          </CardContent>
-        </Card>
+        <CommentArea
+          currentTask={currentTask}
+          handleTaskChange={handleTaskChange}
+          handleSaveTask={handleSaveTask}
+          setCurrentTask={setCurrentTask}
+        />
+        <Comment currentTask={currentTask} />
       </div>
     </Dialog>
   );
