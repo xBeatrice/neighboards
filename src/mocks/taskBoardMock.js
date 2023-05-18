@@ -9,6 +9,7 @@ export const tasks = [
     dueDate: "12/7/23",
     areaPath: "/Main",
     description: "task",
+    comments: [],
   },
   {
     id: "2",
@@ -20,6 +21,7 @@ export const tasks = [
     dueDate: "12/7/23",
     areaPath: "/Main",
     description: "task",
+    comments: [],
   },
   {
     id: "3",
@@ -31,6 +33,7 @@ export const tasks = [
     dueDate: "12/7/23",
     areaPath: "/Main",
     description: "task",
+    comments: [],
   },
   {
     id: "4",
@@ -42,5 +45,6 @@ export const tasks = [
     dueDate: "12/7/23",
     areaPath: "/Main",
     description: "task",
+    comments: [],
   },
 ];
