@@ -21,10 +21,17 @@ export default function CommentArea(props) {
 
   const handleButtonClick = () => {
     if (commentText.trim() !== "") {
+      const timestamp = Date.now();
+      const id = Math.random().toString(36).substr(2, 9);
+
       props.setCurrentTask((prevValues) => ({
         ...prevValues,
-        comments: [...prevValues.comments, commentText],
+        comments: [
+          ...prevValues.comments,
+          { text: commentText, timestamp, id, edited: false },
+        ],
       }));
+
       setCommentText("");
     }
   };

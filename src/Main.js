@@ -386,6 +386,7 @@ export default function Main(props) {
         handleClose={handleCloseDialog}
         selectedTask={taskDialogOptions.selectedTask}
         submit={handleSaveTask}
+        setTasks={setTasks}
       />
     </Box>
   );
