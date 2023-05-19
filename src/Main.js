@@ -402,6 +402,7 @@ export default function Main(props) {
         submit={handleSaveTask}
         setTasks={setTasks}
         handleDelete={handleDelete}
+        setTaskDialogOptions={setTaskDialogOptions}
       />
     </Box>
   );

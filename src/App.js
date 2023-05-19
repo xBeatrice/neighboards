@@ -5,6 +5,7 @@ import NavBar from "./NavBar.js";
 import Main from "./Main.js";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Capacity from "./Capacity.js";
 
 function App({ children }) {
   // const [chosenIteration, setChosenIteration]=React.useState([])
@@ -12,7 +13,7 @@ function App({ children }) {
   // const handleChosenIteration = (taskBoard) => {
   //   setChosenIteration()
   // }
-  const [iteration, setIteration] = React.useState("");
+  const [iteration, setIteration] = React.useState(-1);
 
   const handleChangeIteration = (event) => {
     setIteration(event.target.value);
@@ -21,6 +22,12 @@ function App({ children }) {
 
   const handleChangePerson = (event) => {
     setPerson(event.target.value);
+  };
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
   return (
@@ -32,8 +39,14 @@ function App({ children }) {
           handleChangePerson={handleChangePerson}
           iteration={iteration}
           handleChangeIteration={handleChangeIteration}
+          handleChange={handleChange}
+          value={value}
         />
-        <Main person={person} iteration={iteration} />
+        {value == 2 ? (
+          <Capacity iteration={iteration} />
+        ) : (
+          <Main person={person} iteration={iteration} />
+        )}
       </div>
     </LocalizationProvider>
   );

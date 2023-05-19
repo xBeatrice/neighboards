@@ -14,29 +14,19 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import { users } from "./mocks/usersMock.js";
-import { tasks } from "./mocks/taskBoardMock.js";
+import { iterations } from "./helpers/iterations.js";
 //import NestedList from "./NestedList.js";
 
 function NavBar(props) {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
   const container = {
     display: "flex",
   };
 
-  let tasksIterations = [];
-  tasks.map((t) => tasksIterations.push(t.iteration));
-  let iterations = [...new Set(tasksIterations)];
-
   return (
     <div style={container}>
       <Tabs
-        value={value}
-        onChange={handleChange}
+        value={props.value}
+        onChange={props.handleChange}
         aria-label="icon tabs example"
       >
         <Tab label="Taskboard" aria-label="Taskboard" />
@@ -48,19 +38,26 @@ function NavBar(props) {
         <FormControl variant="standard" sx={{ minWidth: 120 }}>
           <InputLabel id="demo-simple-select-label">Iteration</InputLabel>
           <Select
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: "200px",
+                },
+              },
+            }}
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
             value={props.iteration}
+            name={"id"}
             label="Iteration"
-            defaultValue="Iteration"
             onChange={props.handleChangeIteration}
           >
+            <MenuItem value={-1}>{"all"}</MenuItem>
             {iterations.map((i) => (
-              <MenuItem key={i} value={i}>
-                {i}
+              <MenuItem key={i.id} value={i.id}>
+                {i.id}
               </MenuItem>
             ))}
-            <MenuItem value={"all"}>{"all"}</MenuItem>
           </Select>
         </FormControl>
       </Box>
