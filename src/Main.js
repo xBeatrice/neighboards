@@ -54,6 +54,14 @@ export default function Main(props) {
 
   const [filteredTaskBoard, setFilteredTaskBoard] = React.useState([]);
 
+  const handleDelete = (currentTask) => {
+    if (currentTask) {
+      const newTasksArr = tasks.filter((t) => t.id !== currentTask.id);
+      setTasks(newTasksArr);
+      handleCloseDialog();
+    }
+  };
+
   const handleSaveTask = (updatedTask) => {
     if (taskDialogOptions.isCreating === true) {
       tasks.push(updatedTask);
@@ -320,20 +328,26 @@ export default function Main(props) {
                                 <Typography variant="h6">
                                   {cell.isBug === false ? (
                                     <img
+                                      style={{
+                                        verticalAlign: "text-top",
+                                        marginRight: "2px",
+                                        backgroundColor: "#f0bc34",
+                                      }}
                                       alt="clipboard"
                                       src={Clipboard}
                                       height="25px"
                                       width="25px"
-                                      bgcolor="#f0bc34"
-                                      sx={{ mr: 2 }}
                                     />
                                   ) : (
                                     <img
+                                      style={{
+                                        verticalAlign: "text-top",
+                                        marginRight: "2px",
+                                      }}
                                       alt="bug"
                                       src={Bug}
                                       height="25px"
                                       width="25px"
-                                      sx={{ mr: 2 }}
                                     />
                                   )}
                                   {cell.title}
@@ -387,6 +401,7 @@ export default function Main(props) {
         selectedTask={taskDialogOptions.selectedTask}
         submit={handleSaveTask}
         setTasks={setTasks}
+        handleDelete={handleDelete}
       />
     </Box>
   );

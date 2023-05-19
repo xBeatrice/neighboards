@@ -2,6 +2,7 @@ import * as React from "react";
 import IconButton from "@mui/material/IconButton";
 import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Typography,
   Dialog,
@@ -82,6 +83,10 @@ function TaskDialog(props) {
     props.submit(currentTask);
   };
 
+  const deleteTask = () => {
+    props.handleDelete(currentTask);
+  };
+
   return (
     <Dialog
       fullScreen
@@ -131,6 +136,18 @@ function TaskDialog(props) {
                 />{" "}
               </FormControl>
             </Typography>
+            <IconButton
+              onClick={deleteTask}
+              sx={{
+                backgroundColor: "white",
+                color: "red",
+                mr: 0,
+                ml: "auto",
+                mb: 0.7,
+              }}
+            >
+              <DeleteIcon></DeleteIcon>
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Card

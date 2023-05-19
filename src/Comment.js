@@ -59,12 +59,14 @@ export default function Comment(props) {
 
   const handleEdit = (id) => {
     setEditingId(id);
+    // eslint-disable-next-line eqeqeq
     const editText = props.currentTask.comments.filter((c) => c.id == id);
     setEditedText(editText[0].text);
   };
 
   const handleSave = (id) => {
     for (let i = 0; i < props.currentTask.comments.length; i++) {
+      // eslint-disable-next-line eqeqeq
       if (props.currentTask.comments[i].id == id) {
         props.currentTask.comments[i].text = editedText;
         props.currentTask.comments[i].edited = true;
@@ -160,7 +162,7 @@ export default function Comment(props) {
                     <Typography variant="body1" sx={{ mx: 1, mt: 3, mb: 3 }}>
                       {c.text}
                     </Typography>
-                    {c.edited == true ? (
+                    {c.edited === true ? (
                       <Typography
                         variant="body1"
                         color="gray"
