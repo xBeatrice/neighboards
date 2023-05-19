@@ -13,19 +13,30 @@ export default function DeleteDialog(props) {
   return (
     <div>
       <Dialog open={props.isOpen} onClose={props.handleClose}>
-        <DialogTitle>{"Delete this comment?"}</DialogTitle>
+        <DialogTitle>{"Delete this?"}</DialogTitle>
         <DialogContent>
           <DialogContentText>This action cannot be undone.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => {
-              props.handleClose();
-              handleDelete();
-            }}
-          >
-            Yes
-          </Button>
+          {props.openCommentId ? (
+            <Button
+              onClick={() => {
+                props.handleClose();
+                handleDelete();
+              }}
+            >
+              Delete comment
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                props.handleCloseAll();
+                props.deleteTask();
+              }}
+            >
+              Delete task
+            </Button>
+          )}
           <Button onClick={props.handleClose} autoFocus>
             No
           </Button>

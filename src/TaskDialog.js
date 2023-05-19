@@ -26,12 +26,28 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import CommentArea from "./CommentArea.js";
 import Comment from "./Comment.js";
+import DeleteDialog from "./DeleteDialog.js";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function TaskDialog(props) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseAll = () => {
+    setIsOpen(false);
+    props.setTaskDialogOptions({
+      ...props.taskDialogOptions,
+      isCreating: false,
+      isOpen: false,
+    });
+  };
+
   const [checked, setChecked] = React.useState(true);
 
   const handleCheck = () => {
@@ -137,7 +153,9 @@ function TaskDialog(props) {
               </FormControl>
             </Typography>
             <IconButton
-              onClick={deleteTask}
+              onClick={() => {
+                handleClickOpen();
+              }}
               sx={{
                 backgroundColor: "white",
                 color: "red",
@@ -292,6 +310,11 @@ function TaskDialog(props) {
           setCurrentTask={setCurrentTask}
         />
         <Comment currentTask={currentTask} />
+        <DeleteDialog
+          isOpen={isOpen}
+          deleteTask={deleteTask}
+          handleCloseAll={handleCloseAll}
+        />
       </div>
     </Dialog>
   );
