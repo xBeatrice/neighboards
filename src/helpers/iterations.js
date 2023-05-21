@@ -1,7 +1,7 @@
 const iterations = [
   {
     id: 1,
-    capacity: { 123: 40, 345: 35 },
+    capacity: { 123: 40, 345: 40 },
   },
   {
     id: 2,
