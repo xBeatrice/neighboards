@@ -10,6 +10,8 @@ export const tasks = [
     areaPath: "/Main",
     description: "task",
     comments: [],
+    hoursRemaining: "23",
+    hoursCompleted: "4",
   },
   {
     id: "2",
@@ -22,6 +24,8 @@ export const tasks = [
     areaPath: "/Main",
     description: "task",
     comments: [],
+    hoursRemaining: "12",
+    hoursCompleted: "2",
   },
   {
     id: "3",
@@ -34,6 +38,8 @@ export const tasks = [
     areaPath: "/Main",
     description: "task",
     comments: [],
+    hoursRemaining: "12",
+    hoursCompleted: "4",
   },
   {
     id: "4",
@@ -46,5 +52,7 @@ export const tasks = [
     areaPath: "/Main",
     description: "task",
     comments: [],
+    hoursRemaining: "6",
+    hoursCompleted: "3",
   },
 ];
