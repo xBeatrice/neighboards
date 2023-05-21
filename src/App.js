@@ -6,17 +6,27 @@ import Main from "./Main.js";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Capacity from "./Capacity.js";
+import UsersActivity from "./UsersActivity.js";
+import { users as usersMock } from "./mocks/usersMock.js";
+import { iterations as iterationsHelper } from "./helpers/iterations.js";
 
 function App({ children }) {
-  // const [chosenIteration, setChosenIteration]=React.useState([])
+  const [users, setUsers] = React.useState(usersMock);
 
-  // const handleChosenIteration = (taskBoard) => {
-  //   setChosenIteration()
-  // }
-  const [iteration, setIteration] = React.useState(-1);
+  const handleUsers = (newUsers) => {
+    setUsers(newUsers);
+  };
+
+  const [iterations, setIterations] = React.useState(iterationsHelper);
+
+  const handleIterations = (newIterations) => {
+    setIterations(newIterations);
+  };
+
+  const [currentIteration, setCurrentIteration] = React.useState(-1);
 
   const handleChangeIteration = (event) => {
-    setIteration(event.target.value);
+    setCurrentIteration(event.target.value);
   };
   const [person, setPerson] = React.useState("");
 
@@ -37,15 +47,27 @@ function App({ children }) {
         <NavBar
           person={person}
           handleChangePerson={handleChangePerson}
-          iteration={iteration}
+          currentIteration={currentIteration}
           handleChangeIteration={handleChangeIteration}
           handleChange={handleChange}
           value={value}
         />
-        {value == 2 ? (
-          <Capacity iteration={iteration} />
+        {value === 1 ? (
+          <UsersActivity
+            currentIteration={currentIteration}
+            handleUsers={handleUsers}
+            handleIterations={handleIterations}
+            users={users}
+            iterations={iterations}
+          />
+        ) : value === 2 ? (
+          <Capacity
+            currentIteration={currentIteration}
+            iterations={iterations}
+            users={users}
+          />
         ) : (
-          <Main person={person} iteration={iteration} />
+          <Main person={person} currentIteration={currentIteration} />
         )}
       </div>
     </LocalizationProvider>

@@ -163,10 +163,10 @@ export default function Main(props) {
       for (let j = 0; j < taskBoard[i].result.length; j++) {
         for (let k = 0; k < taskBoard[i].result[j].length; k++) {
           if (
-            props.iteration &&
-            props.iteration !== "all" &&
+            props.currentIteration &&
+            props.currentIteration !== -1 &&
             taskBoard[i].result[j][k] &&
-            taskBoard[i].result[j][k].iteration != props.iteration
+            taskBoard[i].result[j][k].iteration != props.currentIteration
           ) {
             taskBoard[i].result[j][k] = undefined;
           }
@@ -179,7 +179,7 @@ export default function Main(props) {
 
     // Update the state with the filtered taskBoard
     setFilteredTaskBoard(taskBoard);
-  }, [props.iteration, props.person, currentTaskBoard]);
+  }, [props.currentIteration, props.person, currentTaskBoard]);
 
   const treeViewStyle = {
     display: "flex",

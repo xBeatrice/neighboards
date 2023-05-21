@@ -47,12 +47,14 @@ function NavBar(props) {
             }}
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
-            value={props.iteration}
+            value={props.currentIteration}
             name={"id"}
             label="Iteration"
             onChange={props.handleChangeIteration}
           >
-            <MenuItem value={-1}>{"all"}</MenuItem>
+            <MenuItem value={-1} key={"-1"}>
+              all
+            </MenuItem>
             {iterations.map((i) => (
               <MenuItem key={i.id} value={i.id}>
                 {i.id}

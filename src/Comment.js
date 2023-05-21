@@ -194,6 +194,7 @@ export default function Comment(props) {
         handleClickOpen={handleClickOpen}
         handleClose={handleClose}
         onDelete={() => handleDeleteComment(openCommentId)}
+        openCommentId={openCommentId}
       />
     </div>
   );

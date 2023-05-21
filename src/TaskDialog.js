@@ -231,8 +231,8 @@ function TaskDialog(props) {
                     onChange={handleTaskChange}
                   >
                     {iterations.map((i) => (
-                      <MenuItem key={i} value={i}>
-                        Iteration {i}
+                      <MenuItem key={i.id} value={i.id}>
+                        Iteration {i.id}
                       </MenuItem>
                     ))}
                   </TextField>
