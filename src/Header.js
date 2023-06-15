@@ -1,14 +1,14 @@
 import boardlogo from "./boardlogo.svg";
 import search from "./search.svg";
 import { Typography, TextField, InputAdornment, Avatar } from "@mui/material";
-import "./Header.css";
 
 function Header() {
   const container = {
     display: "flex",
-    height: "60px",
+    height: "70px",
     borderBottom: "2px solid #c3c0c0",
     margin: "auto",
+    marginBottom: "6px",
     padding: "10px",
   };
 

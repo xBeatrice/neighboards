@@ -8,11 +8,10 @@ import TreeItem from "@mui/lab/TreeItem";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import TaskDialog from "./TaskDialog.js";
-import { tasks as tasksMock } from "./mocks/taskBoardMock.js";
+import { useTheme } from "@mui/material";
 import { users } from "./mocks/usersMock.js";
 import { states } from "./constants/states.js";
 import useDeepCompareEffect from "use-deep-compare-effect";
-
 import {
   Table,
   TableBody,
@@ -29,70 +28,41 @@ import {
 import { useRef } from "react";
 
 export default function Main(props) {
-  const newTask = {
-    id: "",
-    title: "",
-    userId: "",
-    state: "",
-    isBug: false,
-    iteration: "",
-    dueDate: null,
-    areaPath: "",
-    description: "",
-  };
-
   const [expanded, setExpanded] = React.useState([]);
-
-  const [tasks, setTasks] = React.useState(tasksMock);
-
-  const [taskDialogOptions, setTaskDialogOptions] = React.useState({
-    isOpen: false,
-    isCreating: false,
-  });
 
   const [currentTaskBoard, setCurrentTaskBoard] = React.useState([]);
 
   const [filteredTaskBoard, setFilteredTaskBoard] = React.useState([]);
 
-  const handleDelete = (currentTask) => {
-    if (currentTask) {
-      const newTasksArr = tasks.filter((t) => t.id !== currentTask.id);
-      setTasks(newTasksArr);
-      handleCloseDialog();
-    }
-  };
-
-  const handleSaveTask = (updatedTask) => {
-    if (taskDialogOptions.isCreating === true) {
-      tasks.push(updatedTask);
-    } else {
-      setTasks((prevItems) =>
-        prevItems.map((item) => {
-          if (item.id === updatedTask.id) {
-            return updatedTask;
-          } else {
-            return item;
-          }
-        })
-      );
-    }
-    handleTaskClick(null);
-  };
-
-  const handleCloseDialog = () => {
-    setTaskDialogOptions({
-      ...taskDialogOptions,
-      isCreating: false,
-      isOpen: false,
-    });
-  };
-
   const handleTaskClick = (task) => {
-    setTaskDialogOptions({
-      ...taskDialogOptions,
+    props.setTaskDialogOptions({
+      ...props.taskDialogOptions,
       isCreating: false,
       isOpen: !!task,
       selectedTask: task,
+    });
+  };
+
+  const handleSaveTask = (updatedTask, userStories) => {
+    props.handleSaveTask(
+      updatedTask,
+      userStories.map((s) => s.id)
+    );
+    handleTaskClick(null);
+  };
+
+  const handleDelete = (currentTask) => {
+    if (currentTask) {
+      const newTasksArr = props.tasks.filter((t) => t.id !== currentTask.id);
+      props.setTasks(newTasksArr);
+      handleCloseDialog();
+    }
+  };
+  const handleCloseDialog = () => {
+    props.setTaskDialogOptions({
+      ...props.taskDialogOptions,
+      isCreating: false,
+      isOpen: false,
     });
   };
 
@@ -123,7 +93,7 @@ export default function Main(props) {
 
   useDeepCompareEffect(() => {
     const taskBoard = users.map((user) => {
-      var userTasks = tasks.filter((task) => task.userId === user.id);
+      var userTasks = props.tasks.filter((task) => task.userId === user.id);
 
       let result = [[], [], [], [], [], [], [], [], [], []];
 
@@ -150,12 +120,13 @@ export default function Main(props) {
     });
 
     setCurrentTaskBoard(taskBoard);
-  }, [tasks, tasks.length]);
+  }, [props.tasks, props.tasks.length]);
 
   React.useEffect(() => {
     let taskBoard = JSON.parse(JSON.stringify(currentTaskBoard));
 
     if (props.person && props.person !== "all") {
+      // eslint-disable-next-line eqeqeq
       taskBoard = taskBoard.filter((user) => user.name == props.person);
     }
 
@@ -166,7 +137,7 @@ export default function Main(props) {
             props.currentIteration &&
             props.currentIteration !== -1 &&
             taskBoard[i].result[j][k] &&
-            taskBoard[i].result[j][k].iteration != props.currentIteration
+            taskBoard[i].result[j][k].iteration !== props.currentIteration
           ) {
             taskBoard[i].result[j][k] = undefined;
           }
@@ -185,19 +156,23 @@ export default function Main(props) {
     display: "flex",
     alignItems: "center",
   };
-
+  const theme = useTheme();
   const cellStyle = {
-    borderLeft: "4px solid white",
-    borderRight: "4px solid white",
+    borderLeft:
+      theme.palette.mode === "light" ? "4px solid white" : "4px solid black",
+    borderRight:
+      theme.palette.mode === "light" ? "4px solid white" : "4px solid black",
   };
-
+  const borderColor = theme.palette.mode === "light" ? "white" : "black";
+  const backgroundColor =
+    theme.palette.mode === "light" ? "#e6e6e6" : "#333333";
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Box sx={{ mb: 1, display: "flex" }}>
-        <Button onClick={handleExpandClick} sx={{ minWidth: 150 }}>
+        <Button onClick={handleExpandClick} sx={{ minWidth: 100 }}>
           {expanded.length === 0 ? "Expand all" : "Collapse all"}
         </Button>
-        <Table sx={{ ml: "auto", mr: "8%", mt: 1 }} size="small">
+        <Table sx={{ mt: 1 }} size="small">
           <TableHead>
             <TableRow>
               <TableCell sx={{ minWidth: 200 }} align="center">
@@ -233,7 +208,7 @@ export default function Main(props) {
       >
         {filteredTaskBoard.map((user, i) => (
           <TreeItem
-            sx={{ mt: 1, backgroundColor: "#e6e6e6" }}
+            sx={{ mt: 1, backgroundColor }}
             label={
               <div>
                 <Typography style={treeViewStyle} variant="h5" my={2}>
@@ -247,11 +222,11 @@ export default function Main(props) {
                     variant="contained"
                     onClick={(event) => {
                       event.stopPropagation(); // prevent the click event from propagating to the TreeItem
-                      setTaskDialogOptions({
-                        ...taskDialogOptions,
+                      props.setTaskDialogOptions({
+                        ...props.taskDialogOptions,
                         isCreating: true,
                         isOpen: true,
-                        selectedTask: newTask,
+                        selectedTask: props.newTask,
                       }); // handle the click event for the button
                     }}
                     sx={{
@@ -267,15 +242,15 @@ export default function Main(props) {
             nodeId={i.toString()}
             key={i}
           >
-            <Table sx={{ ml: 10.5 }}>
+            <Table sx={{ ml: 9.5 }}>
               <TableBody>
                 {user.result.map((value, j) => (
                   <TableRow
                     key={j}
                     sx={{
                       "&:last-child td, &:last-child th": {
-                        border: 10,
-                        borderColor: "white",
+                        border: 5,
+                        borderColor,
                       },
                     }}
                   >
@@ -284,21 +259,22 @@ export default function Main(props) {
                         <TableCell
                           key={k + "empty"}
                           sx={{
-                            minWidth: 200,
                             "&:td": { border: 1 },
                           }}
                           style={cellStyle}
-                        ></TableCell>
-                      ) : (
-                        <TableCell
-                          key={k + j}
-                          sx={{ minWidth: 200 }}
-                          style={cellStyle}
                         >
+                          <div
+                            style={{
+                              width: 190,
+                            }}
+                          ></div>
+                        </TableCell>
+                      ) : (
+                        <TableCell key={k + j} style={cellStyle}>
                           <Card
                             className={"cardref"}
                             sx={{
-                              my: 1,
+                              m: "auto",
                               width: 200,
                               display: "flex",
                             }}
@@ -331,7 +307,6 @@ export default function Main(props) {
                                       style={{
                                         verticalAlign: "text-top",
                                         marginRight: "2px",
-                                        backgroundColor: "#f0bc34",
                                       }}
                                       alt="clipboard"
                                       src={Clipboard}
@@ -396,13 +371,16 @@ export default function Main(props) {
         ))}
       </TreeView>
       <TaskDialog
-        isOpen={taskDialogOptions.isOpen}
+        isCreatingTask={props.taskDialogOptions.isCreating}
+        isOpen={props.taskDialogOptions.isOpen}
         handleClose={handleCloseDialog}
-        selectedTask={taskDialogOptions.selectedTask}
+        selectedTask={props.taskDialogOptions.selectedTask}
         submit={handleSaveTask}
-        setTasks={setTasks}
+        setTasks={props.setTasks}
         handleDelete={handleDelete}
-        setTaskDialogOptions={setTaskDialogOptions}
+        tasks={props.tasks}
+        setTaskDialogOptions={props.setTaskDialogOptions}
+        userStories={props.userStories}
       />
     </Box>
   );

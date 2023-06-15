@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 export default function DeleteDialog(props) {
   const handleDelete = () => {
-    props.onDelete(); // Call the onDelete function passed from the parent component
+    props.onDelete();
   };
   return (
     <div>
@@ -31,10 +31,10 @@ export default function DeleteDialog(props) {
             <Button
               onClick={() => {
                 props.handleCloseAll();
-                props.deleteTask();
+                props.currentStory ? props.deleteStory() : props.deleteTask();
               }}
             >
-              Delete task
+              Delete {props.currentStory ? "story" : "task"}
             </Button>
           )}
           <Button onClick={props.handleClose} autoFocus>

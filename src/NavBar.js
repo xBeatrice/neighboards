@@ -9,17 +9,28 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
-import TuneIcon from "@mui/icons-material/Tune";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import SettingsIcon from "@mui/icons-material/Settings";
+
+// import FilterAltIcon from "@mui/icons-material/FilterAlt";
+// import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import { users } from "./mocks/usersMock.js";
 import { iterations } from "./helpers/iterations.js";
-//import NestedList from "./NestedList.js";
+import DarkThemeButton from "./DarkThemeButton";
 
 function NavBar(props) {
   const container = {
     display: "flex",
+  };
+  const handleFullscreen = () => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    }
   };
 
   return (
@@ -32,7 +43,7 @@ function NavBar(props) {
         <Tab label="Taskboard" aria-label="Taskboard" />
         <Tab label="Backlog" aria-label="Backlog" />
         <Tab label="Capacity" aria-label="Capacity" />
-        <Tab label="Analytics" aria-label="Analytics" />
+        <Tab label="User Stories" aria-label="User Stories" />
       </Tabs>
       <Box sx={{ minWidth: 120, mr: 1, ml: "auto" }}>
         <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -83,16 +94,21 @@ function NavBar(props) {
           </Select>
         </FormControl>
       </Box>
-      <IconButton aria-label="modify" color="primary">
-        <TuneIcon />
-      </IconButton>
-      <IconButton aria-label="filter" color="primary">
+      <DarkThemeButton
+        darkMode={props.darkMode}
+        toggleDarkMode={props.toggleDarkMode}
+      />
+      {/* <IconButton aria-label="filter" color="primary">
         <FilterAltIcon />
       </IconButton>
       <IconButton aria-label="settings" color="primary">
         <SettingsIcon />
-      </IconButton>
-      <IconButton aria-label="expand" color="primary">
+      </IconButton> */}
+      <IconButton
+        aria-label="expand"
+        color="primary"
+        onClick={handleFullscreen}
+      >
         <OpenInFullOutlinedIcon />
       </IconButton>
     </div>
