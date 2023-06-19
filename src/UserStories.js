@@ -19,6 +19,7 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import TaskDialog from "./TaskDialog.js";
 import { v4 as uuidv4 } from "uuid";
 import EditIcon from "@mui/icons-material/Edit";
+import { useTheme } from "@mui/material";
 
 export default function UserStories(props) {
   const [openStories, setOpenStories] = React.useState({});
@@ -104,6 +105,10 @@ export default function UserStories(props) {
     setStories(props.userStories);
   }, [props.userStories]);
 
+  const theme = useTheme();
+  const backgroundColor =
+    theme.palette.mode === "light" ? "#f0f8ff" : "#333333";
+
   return (
     <div>
       <div style={{ marginLeft: "2%", width: "86%", marginTop: "2%" }}>
@@ -188,7 +193,7 @@ export default function UserStories(props) {
                 <List>
                   <ListItem
                     key={uuidv4()}
-                    sx={{ display: "grid", backgroundColor: "#f0f8ff" }}
+                    sx={{ display: "grid", backgroundColor }}
                   >
                     {props.tasks
                       // eslint-disable-next-line eqeqeq
