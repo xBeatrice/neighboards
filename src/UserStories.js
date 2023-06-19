@@ -82,14 +82,6 @@ export default function UserStories(props) {
     handleCloseTaskDialog();
   };
 
-  const handleCloseStoryDialog = () => {
-    props.setTaskDialogOptions({
-      ...props.taskDialogOptions,
-      isCreating: false,
-      isOpen: false,
-    });
-  };
-
   const handleCloseTaskDialog = () => {
     props.setTaskDialogOptions({
       ...props.taskDialogOptions,
@@ -117,10 +109,10 @@ export default function UserStories(props) {
       <div style={{ marginLeft: "2%", width: "86%", marginTop: "2%" }}>
         <List>
           <ListItem key={uuidv4()}>
-            <Typography sx={{ ml: 7 }} variant="h6" color="grey">
+            <Typography sx={{ ml: 12 }} variant="h6" color="grey">
               Title
             </Typography>
-            <Typography sx={{ ml: 20 }} variant="h6" color="grey">
+            <Typography sx={{ ml: 38 }} variant="h6" color="grey">
               State
             </Typography>
             <Typography
@@ -154,7 +146,7 @@ export default function UserStories(props) {
                 />
                 <Typography
                   variant="h6"
-                  sx={{ ml: 2, maxWidth: 70, minWidth: 70 }}
+                  sx={{ ml: 2, maxWidth: 190, minWidth: 250 }}
                 >
                   {s.title}
                 </Typography>
@@ -205,7 +197,7 @@ export default function UserStories(props) {
                         <ListItemButton key={uuidv4()}>
                           <Typography
                             variant="h6"
-                            sx={{ maxWidth: 100, minWidth: 100 }}
+                            sx={{ maxWidth: 250, minWidth: 250 }}
                           >
                             {task.isBug ? (
                               <img
@@ -234,7 +226,7 @@ export default function UserStories(props) {
                           </Typography>
                           <Typography
                             variant="h6"
-                            sx={{ ml: 12, maxWidth: 130, minWidth: 130 }}
+                            sx={{ ml: 18.7, maxWidth: 130, minWidth: 130 }}
                           >
                             {task.state}
                           </Typography>

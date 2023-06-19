@@ -277,6 +277,7 @@ export default function Main(props) {
                               m: "auto",
                               width: 200,
                               display: "flex",
+                              height: 265,
                             }}
                             onClick={() => {
                               handleTaskClick(cell);
@@ -288,12 +289,12 @@ export default function Main(props) {
                               sx={
                                 cell.isBug === false
                                   ? {
-                                      height: 240,
+                                      height: 265,
                                       bgcolor: "#f0bc34",
                                       width: 4,
                                     }
                                   : {
-                                      height: 240,
+                                      height: 265,
                                       bgcolor: "#ff4f9b",
                                       width: 4,
                                     }
@@ -301,7 +302,10 @@ export default function Main(props) {
                             />
                             <CardActionArea>
                               <CardContent>
-                                <Typography variant="h6">
+                                <Typography
+                                  variant="body1"
+                                  sx={{ display: "flex" }}
+                                >
                                   {cell.isBug === false ? (
                                     <img
                                       style={{
@@ -330,14 +334,14 @@ export default function Main(props) {
                                 <Typography
                                   style={treeViewStyle}
                                   variant="subtitle1"
-                                  my={2}
+                                  my={0.3}
                                 >
                                   <Avatar
                                     src="./user.svg"
                                     sx={{
-                                      mt: 1,
+                                      mt: 0.3,
                                       mr: 1,
-                                      mb: 1,
+                                      mb: 0.3,
                                       height: 30,
                                       width: 30,
                                       bgcolor: "#0079bf",
