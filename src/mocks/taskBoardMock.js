@@ -6,7 +6,7 @@ export const tasks = [
     state: "Active",
     isBug: false,
     iteration: 1,
-    dueDate: "12/7/23",
+    dueDate: "07/12/23",
     areaPath: "/Main",
     description: "Design and implement the layout for the homepage",
     comments: [],
@@ -20,7 +20,7 @@ export const tasks = [
     state: "Active",
     isBug: false,
     iteration: 1,
-    dueDate: "19/7/23",
+    dueDate: "07/19/23",
     areaPath: "/Main",
     description:
       "Add search functionality to allow users to search for products",
@@ -35,7 +35,7 @@ export const tasks = [
     state: "Code Review",
     isBug: true,
     iteration: 2,
-    dueDate: "11/8/23",
+    dueDate: "08/11/23",
     areaPath: "/Main",
     description:
       "Resolve alignment issue in the navigation menu on smaller screens",
@@ -50,7 +50,7 @@ export const tasks = [
     state: "Testing",
     isBug: true,
     iteration: 3,
-    dueDate: "12/7/23",
+    dueDate: "07/12/23",
     areaPath: "/Authentication",
     description:
       "Implement user registration functionality to allow users to create accounts",
@@ -65,7 +65,7 @@ export const tasks = [
     state: "Not Started",
     isBug: false,
     iteration: 2,
-    dueDate: "23/7/23",
+    dueDate: "07/23/23",
     areaPath: "/Performance",
     description:
       "Optimize product images by compressing and resizing them for improved page load times",

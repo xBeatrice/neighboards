@@ -238,6 +238,7 @@ function TaskDialog(props) {
                   InputProps={{
                     style: {
                       backgroundColor,
+                      width: 350,
                     },
                   }}
                   size="small"
@@ -245,13 +246,7 @@ function TaskDialog(props) {
                     props.currentStory ? handleStoryChange : handleTaskChange
                   }
                   name="title"
-                  value={
-                    props.currentStory && props.currentStory.title
-                      ? currentStory.title
-                      : currentTask && currentTask.title
-                      ? currentTask.title
-                      : undefined
-                  }
+                  value={currentStory?.title || currentTask?.title}
                   placeholder={
                     props.currentStory
                       ? "Enter story title"
@@ -366,6 +361,10 @@ function TaskDialog(props) {
                             {s.title}
                           </MenuItem>
                         ))}
+                        <MenuItem key={"none"} value={"none"}>
+                          {" "}
+                          None{" "}
+                        </MenuItem>
                       </Select>
                     </FormControl>
                   </Typography>
@@ -377,9 +376,7 @@ function TaskDialog(props) {
                       id="outlined-multiline-flexible"
                       label="Area path"
                       name="areaPath"
-                      value={
-                        props.currentTask ? currentTask.areaPath : undefined
-                      }
+                      value={currentTask ? currentTask.areaPath : undefined}
                       onChange={handleTaskChange}
                       multiline
                       maxRows={4}

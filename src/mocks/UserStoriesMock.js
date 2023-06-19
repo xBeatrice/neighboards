@@ -3,7 +3,7 @@ export const userStories = [
     id: "1",
     title: "Intuitive homepage layout",
     state: "Active",
-    dueDate: "12/07/23",
+    dueDate: "07/12/23",
     description:
       "As a user, I want the homepage to have a clean and intuitive layout that showcases featured products, categories, and promotions, making it easy for me to navigate and find what I need.",
     comments: [],
@@ -14,7 +14,7 @@ export const userStories = [
     id: "2",
     title: "Products search",
     state: "Active",
-    dueDate: "12/07/23",
+    dueDate: "07/12/23",
     description:
       "As a user, I want to have the ability to search for products using keywords or filters, so I can quickly find the items I'm interested in.",
     comments: [],
@@ -25,7 +25,7 @@ export const userStories = [
     id: "3",
     title: "Bug-free navigation menu",
     state: "Active",
-    dueDate: "12/07/23",
+    dueDate: "07/12/23",
     description:
       "As a user, I expect the navigation menu to work seamlessly without any alignment issues or glitches, ensuring smooth navigation and a pleasant browsing experience.",
     comments: [],
@@ -36,7 +36,7 @@ export const userStories = [
     id: "4",
     title: "Account creation",
     state: "Active",
-    dueDate: "12/15/23",
+    dueDate: "07/15/23",
     description:
       "As a user, I want the ability to create a new account to access personalized features and make purchases on the website.",
     comments: [],

@@ -269,6 +269,7 @@ export default function UserStories(props) {
             isCreating: true,
             isOpen: true,
             currentStory: newStory,
+            currentTask: undefined,
           });
         }}
         // onClick={() =>
