@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.js": "/neighboards/static/js/main.f01fac12.js",
+    "static/media/clipboard.svg": "/neighboards/static/media/clipboard.05de5574ba077c966d0375ff85025f48.svg",
+    "static/media/bug.svg": "/neighboards/static/media/bug.81e741c524b0af928e9f5f087b3298eb.svg",
+    "static/media/search.svg": "/neighboards/static/media/search.d87a442765040eb4e40e55c59384c673.svg",
+    "index.html": "/neighboards/index.html",
+    "static/media/boardlogo.svg": "/neighboards/static/media/boardlogo.2bd99a93f5520980292e3d819ca16894.svg",
+    "main.f01fac12.js.map": "/neighboards/static/js/main.f01fac12.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.f01fac12.js"
+  ]
+}
