@@ -7,7 +7,7 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
-import TaskDialog from "./TaskDialog.js";
+import TaskDialog from "./TaskDialog.jsx";
 import { useTheme } from "@mui/material";
 import { users } from "./mocks/usersMock.js";
 import { states } from "./constants/states.js";

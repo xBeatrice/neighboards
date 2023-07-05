@@ -14,7 +14,7 @@ import {
 import { currentUser } from "./mocks/currentUserMock";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteDialog from "./DeleteDialog.js";
+import DeleteDialog from "./DeleteDialog.jsx";
 
 function getTimeDifference(timestamp) {
   const postTime = new Date(timestamp);

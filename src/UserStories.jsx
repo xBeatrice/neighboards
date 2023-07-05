@@ -16,7 +16,7 @@ import { users } from "./mocks/usersMock.js";
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import TaskDialog from "./TaskDialog.js";
+import TaskDialog from "./TaskDialog.jsx";
 import { v4 as uuidv4 } from "uuid";
 import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/material";

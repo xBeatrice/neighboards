@@ -22,17 +22,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import Box from "@mui/joy/Box";
-// import Button from "@mui/joy/Button";
-// import FormControl from "@mui/joy/FormControl";
 import { states } from "./constants/states.js";
 import { iterations } from "./helpers/iterations.js";
 import { users } from "./mocks/usersMock.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import CommentArea from "./CommentArea.js";
-import Comment from "./Comment.js";
-import DeleteDialog from "./DeleteDialog.js";
+import CommentArea from "./CommentArea.jsx";
+import Comment from "./Comment.jsx";
+import DeleteDialog from "./DeleteDialog.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 const Transition = React.forwardRef(function Transition(props, ref) {

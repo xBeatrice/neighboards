@@ -10,12 +10,10 @@ import {
   IconButton,
 } from "@mui/material";
 
-// import FilterAltIcon from "@mui/icons-material/FilterAlt";
-// import SettingsIcon from "@mui/icons-material/Settings";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import { users } from "./mocks/usersMock.js";
 import { iterations } from "./helpers/iterations.js";
-import DarkThemeButton from "./DarkThemeButton";
+import DarkThemeButton from "./DarkThemeButton.jsx";
 
 function NavBar(props) {
   const container = {
