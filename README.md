@@ -18,6 +18,9 @@ Neighboards is a personal project developed over a 3-month period using React JS
 4. Utilize the customized capacity tracking features to optimize your workload and stay on top of your tasks.
 5. Immerse yourself in the unique design, created using Material-UI components, for a personalized user experience.
 
+## ⚙️ Backend Integration
+
+Neighboards is integrated with a backend repository to enable CRUD operations. The backend repository, which handles data management and storage, can be found at [neighboards-backend](https://github.com/xBeatrice/neighboards-backend).
 
 ## 🤝 Contributing
 
@@ -26,6 +29,7 @@ Contributions to Neighboards are welcome! If you encounter any bugs, have sugges
 ## 🌐 Deployment
 
 The live version of Neighboards is deployed and accessible at [https://xbeatrice.github.io/neighboards/](https://xbeatrice.github.io/neighboards/). Feel free to explore and interact with the website.
+Note: live version utilizes mock data at the moment and will not make backend requests
 
 ## 🛠️ Technologies Used
 
@@ -33,7 +37,3 @@ The live version of Neighboards is deployed and accessible at [https://xbeatrice
 - Material-UI
 
 
-## 🙏 Acknowledgments
-
-- [React](https://reactjs.org/)
-- [Material-UI](https://material-ui.com/)
