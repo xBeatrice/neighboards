@@ -1,6 +1,6 @@
 # 🏡 Neighboards
 
-Neighboards is a personal project developed over a 3-month period using React JS. It is a website that provides an intuitive interface for efficient task and user stories management. With customized capacity tracking and a unique design, Neighboards offers a personalized user experience.
+Neighboards is a personal project developed using React JS. It is a website that provides an intuitive interface for efficient task and user stories management. With customized capacity tracking and a unique design, Neighboards offers a personalized user experience.
 
 ## ✨ Features
 
