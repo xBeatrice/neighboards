@@ -8,15 +8,18 @@ Neighboards is a personal project developed using React JS. It is a website that
 - **Efficient Task Management:** The intuitive interface of Neighboards empowers users to effectively manage their tasks, enhancing productivity and ensuring timely completion. ⏰
 - **User Stories Management:** Neighboards facilitates collaboration and progress tracking by providing a seamless platform for managing user stories, fostering effective teamwork. 🤝
 - **Customized Capacity Tracking:** With Neighboards, users can easily track and optimize their workload. The capacity tracking feature helps maintain a balanced and efficient workflow. 📊
-- **Unique Design:** The unique design of Neighboards is built with Material-UI components, creating an aesthetically pleasing and engaging user experience. 🎨
+- **Unique Design:** The unique design built with Material-UI components. Features a dark mode as well. 🎨
 
 ## 🎈 Usage
 
 1. Access the website using a web browser.
-2. Sign up or log in to your account.
-3. Explore the intuitive interface designed for efficient task and user stories management.
-4. Utilize the customized capacity tracking features to optimize your workload and stay on top of your tasks.
-5. Immerse yourself in the unique design, created using Material-UI components, for a personalized user experience.
+2. Explore the intuitive interface designed for efficient task and user stories management.
+3. Utilize the customized capacity tracking features to optimize workload and stay on top of tasks.
+4. Immerse yourself in the unique design, created using Material-UI components, for a personalized user experience.
+
+## Backend Integration
+
+Neighboards' frontend communicates with a separate backend repository to make CRUD operations. [neighboards-backend](https://github.com/xBeatrice/neighboards-backend).
 
 
 ## 🤝 Contributing
@@ -32,8 +35,3 @@ The live version of Neighboards is deployed and accessible at [https://xbeatrice
 - React JS
 - Material-UI
 
-
-## 🙏 Acknowledgments
-
-- [React](https://reactjs.org/)
-- [Material-UI](https://material-ui.com/)
