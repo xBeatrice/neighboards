@@ -109,6 +109,14 @@ export default function UserStories(props) {
   const backgroundColor =
     theme.palette.mode === "light" ? "#f0f8ff" : "#333333";
 
+    const formatDate = (dateString) => {
+      const timestamp = parseInt(dateString.match(/\d+/)[0], 10);
+      const date = new Date(timestamp);
+    
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
+    };
+
   return (
     <div>
       <div style={{ marginLeft: "2%", width: "86%", marginTop: "2%" }}>
@@ -171,7 +179,7 @@ export default function UserStories(props) {
                   variant="h6"
                   sx={{ ml: 20, mr: 8, maxWidth: 70, minWidth: 70 }}
                 >
-                  {s.DueDate.toString()}
+                  {formatDate(s.DueDate)}
                 </Typography>
                 {openStories[s.Id] ? <ExpandLess /> : <ExpandMore />}
                 <Button
@@ -200,7 +208,7 @@ export default function UserStories(props) {
                       .filter((t) => s.Tasks && s.Tasks.some((taskId) => taskId == t.Id))
 
                       .map((task) => (
-                        <ListItemButton onClick={() => handleOpen(task.Id)} key={uuidv4()}>
+                        <ListItemButton key={uuidv4()}>
                           <Typography
                             variant="h6"
                             sx={{ maxWidth: 250, minWidth: 250 }}

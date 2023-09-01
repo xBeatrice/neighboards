@@ -10,18 +10,18 @@ export default function Capacity(props) {
   //<LinearProgress variant="determinate" value={normalise(props.value)} />
 
   const hoursRemainingByUserId = props.tasks.reduce((result, task) => {
-    const { userId, hoursRemaining } = task;
-    if (result[userId]) {
-      result[userId] += parseInt(hoursRemaining, 10);
+    const { UserId, HoursRemaining } = task;
+    if (result[UserId]) {
+      result[UserId] += parseInt(HoursRemaining, 10);
     } else {
-      result[userId] = parseInt(hoursRemaining, 10);
+      result[UserId] = parseInt(HoursRemaining, 10);
     }
     return result;
   }, {});
 
   const hoursRemainingActivity = props.users.map((user) => {
-    const { id, activity } = user;
-    return { [activity]: hoursRemainingByUserId[id], user: id };
+    const { Id, activity } = user;
+    return { [activity]: hoursRemainingByUserId[Id], user: Id };
   });
 
   const developmentHours = props.iterations.find(
