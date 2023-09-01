@@ -10,56 +10,65 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
 export default function UsersActivity(props) {
   const [activityValues, setActivityValues] = React.useState({});
-  const [capacityValues, setCapacityValues] = React.useState({});
+  const [stateChangeCount, setStateChangeCount] = React.useState(0);
 
   const handleActivity = (userId) => (event) => {
     setActivityValues((prevValues) => ({
       ...prevValues,
-      [userId]: event.target.value,
+      [userId]: { ...prevValues[userId], activity: event.target.value },
     }));
+    setStateChangeCount((prevCount) => prevCount + 1);
   };
 
   const handleCapacity = (userId) => (event) => {
-    setCapacityValues((prevValues) => ({
+    const newCapacity = event.target.value !== "" ? parseInt(event.target.value) : undefined;
+    setActivityValues((prevValues) => ({
       ...prevValues,
-      [userId]: event.target.value,
+      [userId]: { ...prevValues[userId], capacity: newCapacity },
     }));
+    setStateChangeCount((prevCount) => prevCount + 1);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedUsers = props.users.map((user) => ({
       ...user,
-      activity: activityValues[user.id] || user.activity,
+      ...activityValues[user.Id], // Include the updated activity and capacity
     }));
-
-    const updatedIterations = props.iterations.map((iteration) => {
-      if (iteration.id === props.currentIteration) {
-        const updatedCapacity = {};
-        props.users.forEach((user) => {
-          const capacityValue = capacityValues[user.id];
-          updatedCapacity[user.id] = capacityValue
-            ? capacityValue * 5
-            : props.iterations.find((i) => i.id === props.currentIteration)
-                ?.capacity[user.id];
-        });
-        return {
-          ...iteration,
-          capacity: updatedCapacity,
-        };
+  
+    try {
+      for (const updatedUser of updatedUsers) {
+        await axios.post(
+          `https://localhost:44365/users/update/${updatedUser.Id}`,
+          updatedUser,
+          {
+            headers: {
+              'Content-Type': 'application/json', // Assuming you're sending JSON data
+              // Add other headers if needed
+            },
+          }
+        );
       }
-      return iteration;
-    });
-
-    props.handleUsers(updatedUsers);
-    props.handleIterations(updatedIterations);
+  
+      setStateChangeCount(0); // Reset the state change count
+      props.handleUsers(updatedUsers);
+    } catch (error) {
+      console.error('Error updating users:', error);
+    }
   };
+  
+  
 
-  const isChanged =
-    Object.keys(activityValues).length > 0 ||
-    Object.keys(capacityValues).length > 0;
+  React.useEffect(() => {
+    const initialValues = {};
+    props.users.forEach((user) => {
+      initialValues[user.Id] = { activity: user.Activity, capacity: user.Capacity };
+    });
+    setActivityValues(initialValues);
+  }, [props.users]);
 
   return (
     <div>
@@ -79,16 +88,16 @@ export default function UsersActivity(props) {
               </Typography>
             </ListItem>
             {props.users.map((u) => (
-              <ListItem key={u.id}>
+              <ListItem key={u.Id}>
                 <Avatar sx={{ backgroundColor: "#0079bf" }} />
                 <Typography variant="h5" sx={{ ml: 2 }}>
-                  {u.name}
+                  {u.Name}
                 </Typography>
                 <FormControl sx={{ width: 200, ml: 3 }}>
                   <Select
-                    id={u.id}
-                    value={activityValues[u.id] || u.activity}
-                    onChange={handleActivity(u.id)}
+                    id={u.Id}
+                    value={activityValues[u.Id]?.activity} // Use activityValues[u.Id]?.activity
+                    onChange={handleActivity(u.Id)}
                   >
                     <MenuItem value={"development"}>Development</MenuItem>
                     <MenuItem value={"testing"}>Testing</MenuItem>
@@ -96,23 +105,16 @@ export default function UsersActivity(props) {
                 </FormControl>
                 <TextField
                   sx={{ ml: 3 }}
-                  id={u.id}
-                  onChange={handleCapacity(u.id)}
-                  value={
-                    capacityValues[u.id] !== undefined
-                      ? capacityValues[u.id]
-                      : (
-                          props.iterations.find(
-                            (i) => i.id === props.currentIteration
-                          )?.capacity[u.id] / 5
-                        ).toString() || ""
-                  }
+                  id={u.Id}
+                  onChange={handleCapacity(u.Id)}
+                  value={activityValues[u.Id]?.capacity !== undefined ? activityValues[u.Id]?.capacity : ""}
                   variant="outlined"
+                 
                 />
               </ListItem>
             ))}
           </List>
-          {isChanged && (
+          {stateChangeCount >= 1 && (
             <Button
               variant="contained"
               onClick={handleSave}

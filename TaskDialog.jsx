@@ -76,20 +76,19 @@ function TaskDialog(props) {
   const [currentTask, setCurrentTask] = React.useState(defaultTask);
 
   const defaultStory = {
-    id: uuidv4(),
-    title: "",
-    state: "",
-    description: "",
-    comments: [],
-    storyPoints: "",
-    tasks: [],
+    Id: uuidv4(),
+    Title: "",
+    State: "",
+    Description: "",
+    StoryPoints: "",
+    Tasks: [],
   };
   const [currentStory, setCurrentStory] = React.useState(defaultStory);
 
   const handleSaveTask = (updatedTask) => {
     props.setTasks((prevItems) =>
       prevItems.map((item) => {
-        if (item.id === updatedTask.id) {
+        if (item.Id === updatedTask.Id) {
           return updatedTask;
         } else {
           return item;
@@ -102,18 +101,21 @@ function TaskDialog(props) {
     setSelectedStories(event.target.value);
   };
 
-  // React.useEffect(() => {
-  //   if (props.selectedStory?.id) {
-  //     setSelectedStories([props.selectedStory]);
-  //     setChosenTasks([props.selectedStory.tasks]);
-  //   } else {
-  //     setSelectedStories(
-  //       props.userStories.filter((s) =>
-  //         s.tasks.some((t) => t === currentTask.id)
-  //       )
-  //     );
-  //   }
-  // }, [currentTask.id, props.selectedStory, props.userStories]);
+  React.useEffect(() => {
+    if (props.selectedStory?.Id) {
+      setSelectedStories([props.selectedStory]);
+      setChosenTasks([props.selectedStory.Tasks]);
+    } else {
+      const us = props.userStories.filter((s) =>
+        Array.isArray(s.tasks) && s.tasks.some((t) => t === currentTask.Id)
+      );
+      if (us.length > 0) {
+        setSelectedStories(us);
+      }
+    }
+  }, [currentTask.Id, props.selectedStory, props.userStories]);
+  
+  
 
   React.useEffect(() => {
     if (props.selectedTask) {

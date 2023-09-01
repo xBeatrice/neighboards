@@ -11,8 +11,8 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
-import { userStories } from "./mocks/UserStoriesMock.js";
-import { users } from "./mocks/usersMock.js";
+
+
 import Clipboard from "./clipboard.svg";
 import Bug from "./bug.svg";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -39,10 +39,10 @@ export default function UserStories(props) {
     storyPoints: "",
     tasks: [],
   };
-  const handleOpen = (id) => {
+  const handleOpen = (Id) => {
     setOpenStories((prevState) => ({
       ...prevState,
-      [id]: !prevState[id],
+      [Id]: !prevState[Id],
     }));
   };
 
@@ -61,7 +61,7 @@ export default function UserStories(props) {
     } else {
       setStories((prevItems) =>
         prevItems.map((item) => {
-          if (item.id === updatedStory.id) {
+          if (item.id === updatedStory.Id) {
             return updatedStory;
           } else {
             return item;
@@ -78,7 +78,7 @@ export default function UserStories(props) {
   const handleSaveTask = (updatedTask, userStories) => {
     props.handleSaveTask(
       updatedTask,
-      userStories.map((s) => s.id)
+      userStories.map((s) => s.Id)
     );
     handleCloseTaskDialog();
   };
@@ -95,7 +95,7 @@ export default function UserStories(props) {
 
   const handleDelete = (currentStory) => {
     if (currentStory) {
-      const newStoriesArr = stories.filter((t) => t.id !== currentStory.id);
+      const newStoriesArr = stories.filter((t) => t.Id !== currentStory.Id);
       setStories(newStoriesArr);
       handleCloseTaskDialog();
     }
@@ -134,7 +134,7 @@ export default function UserStories(props) {
           <Divider sx={{ width: "90%" }} key={uuidv4()} />
           {stories.map((s) => (
             <ListItem key={uuidv4()} sx={{ display: "grid" }}>
-              <ListItemButton onClick={() => handleOpen(s.id)} key={uuidv4()}>
+              <ListItemButton onClick={() => handleOpen(s.Id)} key={uuidv4()}>
                 <EditIcon
                   sx={{ color: "#1976d2" }}
                   onClick={(event) => {
@@ -153,27 +153,27 @@ export default function UserStories(props) {
                   variant="h6"
                   sx={{ ml: 2, maxWidth: 190, minWidth: 250 }}
                 >
-                  {s.title}
+                  {s.Title}
                 </Typography>
                 <Typography
                   variant="h6"
                   sx={{ ml: 16, maxWidth: 130, minWidth: 130 }}
                 >
-                  {s.state}
+                  {s.State}
                 </Typography>
                 <Typography
                   variant="h6"
                   sx={{ ml: 23, maxWidth: 70, minWidth: 70 }}
                 >
-                  {s.storyPoints}
+                  {s.StoryPoints}
                 </Typography>
                 <Typography
                   variant="h6"
                   sx={{ ml: 20, mr: 8, maxWidth: 70, minWidth: 70 }}
                 >
-                  {s.dueDate.toString()}
+                  {s.DueDate.toString()}
                 </Typography>
-                {openStories[s.id] ? <ExpandLess /> : <ExpandMore />}
+                {openStories[s.Id] ? <ExpandLess /> : <ExpandMore />}
                 <Button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -189,7 +189,7 @@ export default function UserStories(props) {
                   <AddIcon />
                 </Button>
               </ListItemButton>
-              <Collapse in={openStories[s.id]} timeout="auto" unmountOnExit>
+              <Collapse in={openStories[s.Id]} timeout="auto" unmountOnExit>
                 <List>
                   <ListItem
                     key={uuidv4()}
@@ -197,14 +197,15 @@ export default function UserStories(props) {
                   >
                     {props.tasks
                       // eslint-disable-next-line eqeqeq
-                      .filter((t) => s.tasks.some((taskId) => taskId == t.id))
+                      .filter((t) => s.Tasks && s.Tasks.some((taskId) => taskId == t.Id))
+
                       .map((task) => (
-                        <ListItemButton key={uuidv4()}>
+                        <ListItemButton onClick={() => handleOpen(task.Id)} key={uuidv4()}>
                           <Typography
                             variant="h6"
                             sx={{ maxWidth: 250, minWidth: 250 }}
                           >
-                            {task.isBug ? (
+                            {task.IsBug ? (
                               <img
                                 style={{
                                   verticalAlign: "text-top",
@@ -227,25 +228,25 @@ export default function UserStories(props) {
                                 width="25px"
                               />
                             )}
-                            {task.title}
+                            {task.Title}
                           </Typography>
                           <Typography
                             variant="h6"
                             sx={{ ml: 18.7, maxWidth: 130, minWidth: 130 }}
                           >
-                            {task.state}
+                            {task.State}
                           </Typography>
 
-                          {users
+                          {props.users
                             // eslint-disable-next-line eqeqeq
-                            .filter((u) => u.id == task.userId)
+                            .filter((u) => u.Id == task.UserId)
                             .map((username) => (
                               <Typography
                                 variant="h6"
                                 sx={{ ml: 14, maxWidth: 170, minWidth: 170 }}
                                 key={uuidv4()}
                               >
-                                Assigned to: {username.name}
+                                Assigned to: {username.Name}
                               </Typography>
                             ))}
 
@@ -253,7 +254,7 @@ export default function UserStories(props) {
                             variant="h6"
                             sx={{ ml: 11, maxWidth: 190, minWidth: 190 }}
                           >
-                            Remaining hours: {task.hoursRemaining}
+                            Remaining hours: {task.HoursRemaining}
                           </Typography>
                         </ListItemButton>
                       ))}
@@ -277,14 +278,7 @@ export default function UserStories(props) {
             currentTask: undefined,
           });
         }}
-        // onClick={() =>
-        //   setStoryDialogOptions({
-        //     ...storyDialogOptions,
-        //     isCreating: true,
-        //     isOpen: true,
-        //     newStory: newStory,
-        //   })
-        // }
+        
       >
         New User Story
       </Button>
@@ -297,11 +291,12 @@ export default function UserStories(props) {
         currentStory={props.taskDialogOptions.currentStory}
         isCreatingStory={props.taskDialogOptions.isCreating}
         setStoryDialogOptions={setStoryDialogOptions}
-        userStories={userStories}
+        userStories={props.userStories}
         submit={handleSaveTask}
         handleSaveStory={handleSaveStory}
         handleDeleteStory={handleDelete}
         stories={stories}
+        users={props.users}
       />
     </div>
   );

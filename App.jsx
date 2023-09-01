@@ -193,6 +193,7 @@ function App({ children }) {
               taskDialogOptions={taskDialogOptions}
               setTaskDialogOptions={setTaskDialogOptions}
               newTask={newTask}
+              users={users}
               userStories={userStories}
               handleSaveTask={handleSaveTask}
             />
