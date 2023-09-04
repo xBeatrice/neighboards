@@ -10,6 +10,26 @@ Neighboards is a personal project developed using React JS. It is a website that
 - **Customized Capacity Tracking:** With Neighboards, users can easily track and optimize their workload. The capacity tracking feature helps maintain a balanced and efficient workflow. 📊
 - **Unique Design:** The unique design built with Material-UI components. Features a dark mode as well. 🎨
 
+## Main page 
+
+![Screenshot](main.png)
+
+## Task dialog 
+
+![Screenshot](taskdialog.png)
+
+## Backlog page 
+
+![Screenshot](backlog.png)
+
+## Capacity page 
+
+![Screenshot](capacity.png)
+
+## User stories page 
+
+![Screenshot](userstories.png)
+
 ## 🎈 Usage
 
 1. Access the website using a web browser.
