@@ -24,21 +24,7 @@ import { useTheme } from "@mui/material";
 export default function UserStories(props) {
   const [openStories, setOpenStories] = React.useState({});
   const [stories, setStories] = React.useState([]);
-  const [storyDialogOptions, setStoryDialogOptions] = React.useState({
-    isOpen: false,
-    isCreating: false,
-  });
 
-  const newStory = {
-    id: uuidv4(),
-    title: "",
-    state: "",
-    dueDate: "",
-    description: "",
-    comments: [],
-    storyPoints: "",
-    tasks: [],
-  };
   const handleOpen = (Id) => {
     setOpenStories((prevState) => ({
       ...prevState,
@@ -46,40 +32,8 @@ export default function UserStories(props) {
     }));
   };
 
-  const handleSaveStory = (updatedStory, ChosenTasks) => {
-    if (props.taskDialogOptions.isCreating === true) {
-      stories.push({
-        ...updatedStory,
-        tasks: ChosenTasks,
-      });
-
-      props.setTaskDialogOptions({
-        ...props.taskDialogOptions,
-        isCreating: false,
-        isOpen: false,
-      });
-    } else {
-      setStories((prevItems) =>
-        prevItems.map((item) => {
-          if (item.id === updatedStory.Id) {
-            return updatedStory;
-          } else {
-            return item;
-          }
-        })
-      );
-      props.setTaskDialogOptions({
-        ...props.taskDialogOptions,
-        isOpen: false,
-      });
-    }
-  };
-
-  const handleSaveTask = (updatedTask, userStories) => {
-    props.handleSaveTask(
-      updatedTask,
-      userStories.map((s) => s.Id)
-    );
+  const handleSaveTask = (updatedTask, isTask) => {
+    props.handleSaveTask(updatedTask, isTask);
     handleCloseTaskDialog();
   };
 
@@ -89,7 +43,6 @@ export default function UserStories(props) {
       isCreating: false,
       isOpen: false,
       selectedTask: null,
-      selectedStory: null,
     });
   };
 
@@ -152,8 +105,8 @@ export default function UserStories(props) {
                       isCreating: false,
                       isOpen: true,
                       isEditing: true,
-                      currentStory: s,
-                      selectedStory: s,
+                      value: s,
+                      isTask: false
                     });
                   }}
                 />
@@ -189,8 +142,7 @@ export default function UserStories(props) {
                       ...props.taskDialogOptions,
                       isCreating: true,
                       isOpen: true,
-                      selectedStory: s,
-                      selectedTask: props.newTask,
+                      isTask: true
                     });
                   }}
                 >
@@ -282,8 +234,7 @@ export default function UserStories(props) {
             ...props.taskDialogOptions,
             isCreating: true,
             isOpen: true,
-            currentStory: newStory,
-            currentTask: undefined,
+            isTask: false
           });
         }}
         
@@ -294,15 +245,12 @@ export default function UserStories(props) {
         tasks={props.tasks}
         handleClose={handleCloseTaskDialog}
         isOpen={props.taskDialogOptions.isOpen}
-        selectedStory={props.taskDialogOptions.selectedStory}
         selectedTask={props.taskDialogOptions.selectedTask}
-        currentStory={props.taskDialogOptions.currentStory}
-        isCreatingStory={props.taskDialogOptions.isCreating}
-        setStoryDialogOptions={setStoryDialogOptions}
+        isCreating={props.taskDialogOptions.isCreating}
+        isTask={props.taskDialogOptions.isTask}
         userStories={props.userStories}
         submit={handleSaveTask}
-        handleSaveStory={handleSaveStory}
-        handleDeleteStory={handleDelete}
+        handleDelete={handleDelete}
         stories={stories}
         users={props.users}
       />

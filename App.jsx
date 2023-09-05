@@ -76,62 +76,56 @@ function App({ children }) {
     setValue(newValue);
   };
 
-  const handleSaveTask = async (updatedTask, userStoryIds) => {
+  const handleSaveItem = async (item, isTask) => {
+    const baseUrl = "https://localhost:44365/" + isTask ? 'tasks' : 'userStories'
+
     if (taskDialogOptions.isCreating === true) {
       // Send a POST request to create a new task
-      const response= await axios.post('https://localhost:44365/tasks/create', updatedTask, {
+      await axios.post(baseUrl + '/create', item, {
        
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       })
-        .then((createdTask) => {
+        .then((createdItem) => {
           // Add the newly created task to the tasks state
-          setTasks((prevTasks) => [...prevTasks, createdTask]);
-  
-          // Update user story tasks
-          updateUserStoryTasks(userStoryIds, createdTask.id);
+          if (isTask){
+            setTasks((prevTasks) => [...prevTasks, createdItem]);
+          }
+          else{
+            setUserStories((prevStories) => [...prevStories, createdItem]);
+          }
         })
         .catch((error) => {
-          console.error('Error creating task:', error);
+          console.error('Error:', error);
         });
     } else {
       // Send a PUT request to update an existing task
-      const response = await axios.post(`https://localhost:44365/tasks/update/${updatedTask.Id}`, updatedTask, {
+      await axios.post(`${baseUrl}/update/${item.Id}`, item, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
       })
-  
-        .then((updatedTaskResponse) => {
-          // Update the tasks state with the updated task
-          setTasks((prevTasks) =>
-            prevTasks.map((task) =>
-              task.Id === updatedTaskResponse.Id ? updatedTaskResponse : task
-            )
-          );
-  
-          // Update user story tasks
-          updateUserStoryTasks(userStoryIds, updatedTaskResponse.Id);
+        .then((updatedItem) => {
+          if (isTask) {
+            setTasks((prevTasks) =>
+              prevTasks.map((task) =>
+                task.Id === updatedItem.Id ? updatedItem : task
+              )
+            );
+          }
+          else{
+            setUserStories((prevStories) =>
+              prevStories.map((story) =>
+                  story.Id === updatedItem.Id ? updatedItem : story
+                )
+              );
+          }
         })
         .catch((error) => {
-          console.error('Error updating task:', error);
+          console.error('Error:', error);
         });
     }
-  };
-  
-  const updateUserStoryTasks = (userStoryIds, taskId) => {
-    const clonedUserStories = JSON.parse(JSON.stringify(userStories));
-  
-    clonedUserStories.forEach((userStory) => {
-      if (!userStoryIds.includes(userStory.Id)) {
-        userStory.tasks = userStory.tasks.filter((task) => task !== taskId);
-      } else if (!userStory.tasks.includes(taskId)) {
-        userStory.tasks.push(taskId);
-      }
-    });
-  
-    setUserStories(clonedUserStories);
   };
   
   const newTask = {
@@ -195,7 +189,7 @@ function App({ children }) {
               newTask={newTask}
               users={users}
               userStories={userStories}
-              handleSaveTask={handleSaveTask}
+              handleSaveTask={handleSaveItem}
             />
           ) : (
             <Main
@@ -208,7 +202,7 @@ function App({ children }) {
               users={users}
               setTasks={setTasks}
               newTask={newTask}
-              handleSaveTask={handleSaveTask}
+              handleSaveTask={handleSaveItem}
             />
           )}
         </div>

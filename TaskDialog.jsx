@@ -32,58 +32,48 @@ import Comment from "./Comment.jsx";
 import DeleteDialog from "./DeleteDialog.jsx";
 import { v4 as uuidv4 } from "uuid";
 
+const defaultTask = {
+  id: uuidv4(),
+  title: "",
+  state: "",
+  dueDate: "",
+  description: "",
+  comments: [],
+  iteration: "",
+  userId: "",
+  hourRemaining: "",
+  hoursCompleted: "",
+  userStoryId: ""
+}
+
+const defaultUserStory = {
+  id: uuidv4(),
+  title: "",
+  state: "",
+  dueDate: "",
+  description: "",
+  comments: [],
+  storyPoints: "",
+  tasks: [],
+};
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function TaskDialog(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedStories, setSelectedStories] = React.useState([]);
-  const [checked, setChecked] = React.useState(true);
-  const [chosenTasks, setChosenTasks] = React.useState([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [currentTask, setCurrentTask] = React.useState(props.isTask ? defaultTask : defaultUserStory);
 
-  const handleChosenTasks = (event) => {
-    setChosenTasks(event.target.value); // check
+  const handleClose = () => {
+    setIsDeleteDialogOpen(false);
+
+    props.setTaskDialogOptions({
+      ...props.taskDialogOptions,
+      isCreating: false,
+      isOpen: false,
+    });
   };
-
-  const handleClickOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseAll = () => {
-    setIsOpen(false);
-    if (props.currentStory) {
-      props.setStoryDialogOptions({
-        ...props.storyDialogOptions,
-        isCreating: false,
-        isOpen: false,
-      });
-    } else {
-      props.setTaskDialogOptions({
-        ...props.taskDialogOptions,
-        isCreating: false,
-        isOpen: false,
-      });
-    }
-  };
-
-  const handleCheck = () => {
-    setChecked(!checked);
-  };
-
-  const defaultTask = {};
-
-  const [currentTask, setCurrentTask] = React.useState(defaultTask);
-
-  const defaultStory = {
-    Id: uuidv4(),
-    Title: "",
-    State: "",
-    Description: "",
-    StoryPoints: "",
-    Tasks: [],
-  };
-  const [currentStory, setCurrentStory] = React.useState(defaultStory);
 
   const handleSaveTask = (updatedTask) => {
     props.setTasks((prevItems) =>
@@ -97,43 +87,14 @@ function TaskDialog(props) {
     );
   };
 
-  const handleSelectStories = (event) => {
-    setSelectedStories(event.target.value);
-  };
-
   React.useEffect(() => {
-    if (props.selectedStory?.Id) {
-      setSelectedStories([props.selectedStory]);
-      setChosenTasks([props.selectedStory.Tasks]);
-    } else {
-      const us = props.userStories.filter((s) =>
-        Array.isArray(s.tasks) && s.tasks.some((t) => t === currentTask.Id)
-      );
-      if (us.length > 0) {
-        setSelectedStories(us);
-      }
-    }
-  }, [currentTask.Id, props.selectedStory, props.userStories]);
-  
-  
-
-  React.useEffect(() => {
-    if (props.selectedTask) {
+    if (props.selectedTask){
       setCurrentTask(JSON.parse(JSON.stringify(props.selectedTask)));
-    } else {
-      setCurrentTask(defaultStory);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.selectedTask]);
-
-  React.useEffect(() => {
-    if (props.currentStory) {
-      setCurrentStory(JSON.parse(JSON.stringify(props.currentStory)));
-    } else {
-      setCurrentStory(defaultTask);
+    else{
+      setCurrentTask(props.isTask ? defaultTask : defaultUserStory);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentStory]);
+  }, [props.selectedTask, props.isTask]);
 
   const handleTaskChange = (event) => {
     // name = key
@@ -146,49 +107,21 @@ function TaskDialog(props) {
     }));
   };
 
-  const handleStoryChange = (event) => {
-    // name = key
-    const { name, value } = event.target;
-
-    setCurrentStory((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-      Id: prevValues.Id,
-    }));
-  };
-
   const handleDueDateChange = (date) => {
     const formattedDate = date.format("DD/MM/YYYY");
 
-    if (props.currentStory) {
-      setCurrentStory((prevValues) => ({
-        ...prevValues,
-        DueDate: dayjs(formattedDate),
-      }));
-    } else {
-      setCurrentTask((prevValues) => ({
-        ...prevValues,
-        DueDate: dayjs(formattedDate),
-      }));
-    }
+    setCurrentTask((prevValues) => ({
+      ...prevValues,
+      DueDate: dayjs(formattedDate),
+    }));
   };
 
   const handleSubmit = () => {
-    props.submit(currentTask, selectedStories);
+    props.submit(currentTask, props.isTask);
   };
 
   const deleteTask = () => {
     props.handleDelete(currentTask);
-  };
-
-  const deleteStory = () => {
-    props.handleDeleteStory(props.currentStory);
-  };
-
-  const handleSaveStory = () => {
-    props.handleSaveStory(currentStory, chosenTasks);
-    setCurrentStory(defaultStory);
-    setChosenTasks([]);
   };
 
   const theme = useTheme();
@@ -206,13 +139,11 @@ function TaskDialog(props) {
         <AppBar
           sx={{
             position: "relative",
-            backgroundColor: props.currentStory
+            backgroundColor: !props.isTask
               ? "#096bde"
-              : currentTask
-              ? currentTask.IsBug
-                ? "#ff4f9b"
-                : "#f0b924"
-              : "#1976d2",
+              : currentTask.IsBug
+              ? "#ff4f9b"
+              : "#f0b924"
           }}
         >
           <Toolbar>
@@ -228,7 +159,6 @@ function TaskDialog(props) {
               <FormControl
                 sx={{
                   display: "flex",
-
                   height: 46,
                 }}
               >
@@ -241,13 +171,11 @@ function TaskDialog(props) {
                     },
                   }}
                   size="small"
-                  onChange={
-                    props.currentStory ? handleStoryChange : handleTaskChange
-                  }
+                  onChange={handleTaskChange}
                   name="Title"
-                  value={currentStory?.Title || currentTask?.Title}
+                  value={currentTask.Title}
                   placeholder={
-                    props.currentStory
+                    !props.isTask
                       ? "Enter story title"
                       : "Enter task title"
                   }
@@ -255,9 +183,7 @@ function TaskDialog(props) {
               </FormControl>
             </Typography>
             <IconButton
-              onClick={() => {
-                handleClickOpen();
-              }}
+              onClick={() => setIsDeleteDialogOpen(true) }
               sx={{
                 backgroundColor: "white",
                 color: "red",
@@ -288,17 +214,9 @@ function TaskDialog(props) {
                     id="outlined"
                     select
                     label="State"
-                    value={
-                      props.currentStory && props.currentStory.State
-                        ? currentStory.State
-                        : currentTask && currentTask.State
-                        ? currentTask.State
-                        : undefined
-                    }
+                    value={props.currentStory.State}
                     name="State"
-                    onChange={
-                      props.currentStory ? handleStoryChange : handleTaskChange
-                    }
+                    onChange={handleTaskChange}
                   >
                     {states.map((s) => (
                       <MenuItem key={s} value={s}>
@@ -312,13 +230,7 @@ function TaskDialog(props) {
               <Typography variant="subtitle1" sx={{ mx: 2, mt: 1 }}>
                 <DatePicker
                   sx={{ width: 200, my: 1 }}
-                  value={
-                    props.currentStory && props.currentStory.DueDate
-                      ? dayjs(props.currentStory.DueDate)
-                      : currentTask && currentTask.DueDate
-                      ? dayjs(currentTask.DueDate)
-                      : undefined
-                  }
+                  value={currentTask.DueDate}
                   format={"DD/MM/YYYY"}
                   label="Due date"
                   name="DueDate"
@@ -326,19 +238,15 @@ function TaskDialog(props) {
                   disableFuture={false}
                 />
               </Typography>
-              {props.currentStory ? (
+              {!props.isTask ? (
                 <div>
                   <Typography variant="subtitle1" sx={{ mx: 2, mt: 1 }}>
                     <TextField
                       id="outlined-multiline-flexible"
                       label="Story Points"
                       name="StoryPoints"
-                      value={
-                        props.currentStory && props.currentStory.StoryPoints
-                          ? currentStory.StoryPoints
-                          : undefined
-                      }
-                      onChange={handleStoryChange}
+                      value={currentTask.StoryPoints}
+                      onChange={handleTaskChange}
                       sx={{ width: 200, my: 1 }}
                     />
                   </Typography>
@@ -349,11 +257,11 @@ function TaskDialog(props) {
                         id="tasks-select"
                         labelId="tasks-select"
                         sx={{ width: 550, mt: 1, mb: 1 }}
-                        value={chosenTasks}
+                        value={currentTask.Tasks}
                         input={<OutlinedInput label="Tasks" />}
                         name="Tasks"
                         multiple
-                        onChange={handleChosenTasks}
+                        onChange={handleTaskChange}
                       >
                         {props.tasks.map((s) => (
                           <MenuItem key={s.Id} value={s.Id}>
@@ -375,7 +283,7 @@ function TaskDialog(props) {
                       id="outlined-multiline-flexible"
                       label="Area path"
                       name="AreaPath"
-                      value={currentTask ? currentTask.AreaPath : undefined}
+                      value={currentTask.AreaPath}
                       onChange={handleTaskChange}
                       multiline
                       maxRows={4}
@@ -387,7 +295,7 @@ function TaskDialog(props) {
                       <TextField
                         select
                         sx={{ width: 200, mt: 1 }}
-                        value={currentTask ? currentTask.Iteration : undefined}
+                        value={currentTask.Iteration}
                         name="Iteration"
                         label="Iteration"
                         onChange={handleTaskChange}
@@ -409,16 +317,8 @@ function TaskDialog(props) {
                     id="outlined-multiline-static"
                     label="Description"
                     name="Description"
-                    value={
-                      props.currentStory && props.currentStory.Description
-                        ? currentStory.Description
-                        : currentTask && currentTask.Description
-                        ? currentTask.Description
-                        : undefined
-                    }
-                    onChange={
-                      props.currentStory ? handleStoryChange : handleTaskChange
-                    }
+                    value={currentTask.Description}
+                    onChange={handleTaskChange}
                     multiline
                     rows={4}
                   />
@@ -430,17 +330,9 @@ function TaskDialog(props) {
                     width: 80,
                     mt: 6,
                   }}
-                  onClick={props.currentStory ? handleSaveStory : handleSubmit}
+                  onClick={handleSubmit}
                 >
-                  {(props.selectedTask &&
-                    // eslint-disable-next-line eqeqeq
-                    props.tasks.some(
-                      // eslint-disable-next-line eqeqeq
-                      (task) => task.Id == props.selectedTask.Id
-                    )) ||
-                  (props.currentStory &&
-                    // eslint-disable-next-line eqeqeq
-                    props.stories.some((s) => s.Id == props.currentStory.Id))
+                  {!props.isCreating
                     ? "EDIT"
                     : "SAVE"}
                 </Button>
@@ -482,11 +374,11 @@ function TaskDialog(props) {
                     </TextField>
                     <Select
                       id="user-story-select"
+                      name="UserStoryId"
                       sx={{ width: 220, mt: 2 }}
-                      value={selectedStories}
+                      value={currentTask ? currentTask.UserStoryId : null}
                       label="User Story"
-                      multiple
-                      onChange={handleSelectStories}
+                      onChange={handleTaskChange}
                     >
                       {props.userStories.map((s) => (
                         <MenuItem key={s.Id} value={s}>
@@ -500,9 +392,7 @@ function TaskDialog(props) {
                   control={
                     <Switch
                       value={currentTask.IsBug}
-                      checked={currentTask.IsBug ? checked : null}
                       name="IsBug"
-                      onClick={handleCheck}
                       onChange={handleTaskChange}
                     />
                   }
@@ -512,28 +402,24 @@ function TaskDialog(props) {
             )}
           </CardContent>
         </Card>
-        {props.isCreatingTask || props.isCreatingStory ? (
+        {props.isCreating ? (
           <div></div>
         ) : (
           <div>
-            <CommentArea
+            {/* <CommentArea
               currentTask={currentTask}
               handleTaskChange={handleTaskChange}
               handleSaveTask={handleSaveTask}
               setCurrentTask={setCurrentTask}
-              currentStory={props.currentStory}
-              handleSaveStory={handleSaveStory}
-              setCurrentStory={setCurrentStory}
             />
-            <Comment currentTask={currentTask} currentStory={currentStory} />
+            <Comment currentTask={currentTask} /> */}
           </div>
         )}
         <DeleteDialog
-          currentStory={props.currentStory}
-          isOpen={isOpen}
-          deleteStory={deleteStory}
+          isOpen={isDeleteDialogOpen}
+          handleClose={handleClose}
           deleteTask={deleteTask}
-          handleCloseAll={handleCloseAll}
+          isTask={props.isTask}
         />
       </div>
     </Dialog>

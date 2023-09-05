@@ -30,11 +30,11 @@ export default function DeleteDialog(props) {
           ) : (
             <Button
               onClick={() => {
-                props.handleCloseAll();
-                props.currentStory ? props.deleteStory() : props.deleteTask();
+                props.deleteTask();
+                props.handleClose();
               }}
             >
-              Delete {props.currentStory ? "story" : "task"}
+              Delete {props.isTask ? "story" : "task"}
             </Button>
           )}
           <Button onClick={props.handleClose} autoFocus>

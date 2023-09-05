@@ -43,11 +43,8 @@ export default function Main(props) {
     });
   };
 
-  const handleSaveTask = (updatedTask, userStories) => {
-    props.handleSaveTask(
-      updatedTask,
-      userStories.map((s) => s.Id)
-    );
+  const handleSaveTask = (updatedTask) => {
+    props.handleSaveTask(updatedTask, true);
     handleTaskClick(null);
   };
 
@@ -390,7 +387,7 @@ export default function Main(props) {
         ))}
       </TreeView>
       <TaskDialog
-        isCreatingTask={props.taskDialogOptions.isCreating}
+        isCreating={props.taskDialogOptions.isCreating}
         isOpen={props.taskDialogOptions.isOpen}
         handleClose={handleCloseDialog}
         selectedTask={props.taskDialogOptions.selectedTask}
@@ -399,6 +396,7 @@ export default function Main(props) {
         handleDelete={handleDelete}
         tasks={props.tasks}
         setTaskDialogOptions={props.setTaskDialogOptions}
+        isTask={true}
         userStories={props.userStories}
         users={props.users}
       />

@@ -20,8 +20,8 @@ export default function Capacity(props) {
   }, {});
 
   const hoursRemainingActivity = props.users.map((user) => {
-    const { Id, activity } = user;
-    return { [activity]: hoursRemainingByUserId[Id], user: Id };
+    const { Id, Activity } = user;
+    return { [Activity]: hoursRemainingByUserId[Id], user: Id };
   });
 
   const developmentHours = props.iterations.find(

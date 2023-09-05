@@ -10,7 +10,7 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-
+import axios from "axios";
 import { currentUser } from "./mocks/currentUserMock";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,6 +41,16 @@ export default function Comment(props) {
   const [openCommentId, setOpenCommentId] = React.useState(null);
   const [editingId, setEditingId] = React.useState(null);
   const [editedText, setEditedText] = React.useState("");
+  const [comments, setComments]=React.useState([])
+
+  const fetchComments = async (itemId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/comments/get/${props.currentTask.Id}`);
+      setComments(response.data)
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
 
   const handleClickOpen = (commentId) => {
     setOpenCommentId(commentId);
@@ -95,25 +105,10 @@ export default function Comment(props) {
     }
   };
 
-  let commentsArray = [];
-
-  if (
-    props.currentStory?.id &&
-    props.currentStory.comments &&
-    props.currentStory.comments.length > 0
-  ) {
-    commentsArray = props.currentStory.comments;
-  } else if (
-    props.currentTask &&
-    props.currentTask.comments &&
-    props.currentTask.comments.length > 0
-  ) {
-    commentsArray = props.currentTask.comments;
-  }
 
   return (
     <div>
-      {commentsArray.map((c, index) => (
+      {comments.map((c, index) => (
         <div key={index}>
           {editingId === c.id ? (
             <div key={c.id}>
