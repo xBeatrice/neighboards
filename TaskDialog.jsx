@@ -33,28 +33,28 @@ import DeleteDialog from "./DeleteDialog.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 const defaultTask = {
-  id: uuidv4(),
-  title: "",
-  state: "",
-  dueDate: "",
-  description: "",
-  comments: [],
-  iteration: "",
-  userId: "",
-  hourRemaining: "",
-  hoursCompleted: "",
-  userStoryId: ""
+  Id: uuidv4(),
+  Title: "",
+  State: "",
+  DueDate: "",
+  Description: "",
+  Comments: [],
+  Iteration: "",
+  UserId: "",
+  HourRemaining: "",
+  HoursCompleted: "",
+  UserStoryId: ""
 }
 
 const defaultUserStory = {
-  id: uuidv4(),
-  title: "",
-  state: "",
-  dueDate: "",
-  description: "",
-  comments: [],
-  storyPoints: "",
-  tasks: [],
+  Id: uuidv4(),
+  Title: "",
+  State: "",
+  DueDate: "",
+  Description: "",
+  Comments: [],
+  StoryPoints: "",
+  Tasks: [],
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -73,18 +73,6 @@ function TaskDialog(props) {
       isCreating: false,
       isOpen: false,
     });
-  };
-
-  const handleSaveTask = (updatedTask) => {
-    props.setTasks((prevItems) =>
-      prevItems.map((item) => {
-        if (item.Id === updatedTask.Id) {
-          return updatedTask;
-        } else {
-          return item;
-        }
-      })
-    );
   };
 
   React.useEffect(() => {
@@ -214,7 +202,7 @@ function TaskDialog(props) {
                     id="outlined"
                     select
                     label="State"
-                    value={props.currentStory.State}
+                    value={currentTask.State}
                     name="State"
                     onChange={handleTaskChange}
                   >
@@ -338,7 +326,7 @@ function TaskDialog(props) {
                 </Button>
               </Box>
             </Box>
-            {props.currentStory ? (
+            {!props.isTask ? (
               <div></div>
             ) : (
               <Box sx={{ ml: "auto", mr: 1, my: 1 }}>

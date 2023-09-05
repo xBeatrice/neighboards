@@ -105,7 +105,7 @@ export default function UserStories(props) {
                       isCreating: false,
                       isOpen: true,
                       isEditing: true,
-                      value: s,
+                      selectedTask: s,
                       isTask: false
                     });
                   }}

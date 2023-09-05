@@ -77,7 +77,7 @@ function App({ children }) {
   };
 
   const handleSaveItem = async (item, isTask) => {
-    const baseUrl = "https://localhost:44365/" + isTask ? 'tasks' : 'userStories'
+    const baseUrl = `https://localhost:44365/${isTask ? 'tasks' : 'userStories'}`
 
     if (taskDialogOptions.isCreating === true) {
       // Send a POST request to create a new task
