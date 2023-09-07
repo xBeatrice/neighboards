@@ -14,7 +14,6 @@ import axios from "axios";
 import { currentUser } from "./mocks/currentUserMock";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteDialog from "./DeleteDialog.jsx";
 
 function getTimeDifference(timestamp) {
   const postTime = new Date(timestamp);
@@ -38,79 +37,62 @@ function getTimeDifference(timestamp) {
 }
 
 export default function Comment(props) {
-  const [openCommentId, setOpenCommentId] = React.useState(null);
-  const [editingId, setEditingId] = React.useState(null);
-  const [editedText, setEditedText] = React.useState("");
-  const [comments, setComments]=React.useState([])
 
-  const fetchComments = async (itemId) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/comments/get/${props.currentTask.Id}`);
-      setComments(response.data)
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
+  const setTaskComments = (comments) => {
+    props.setCurrentTask((prevValues) => ({
+      ...prevValues,
+      Comments: comments,
+    }));
+  }
+
+  const handleCommentOpen = (index) => {
+    const comments = [...props.currentTask.Comments]
+    comments[index].isEditing = true
+
+    setTaskComments(comments)
+  };
+    
+
+  const handleCommentDelete = async (commentId) => {
+    const comments = props.currentTask.comments.filter(
+      (c) => c.id !== commentId
+    );
+    
+    setTaskComments(comments)
+
+    await axios.get('https://localhost:44365/comments/delete/' + commentId);  
+  }
+
+  const handleCommentChange = (index, content) => {
+    const comments = [...props.currentTask.Comments]
+    comments[index].Content = content
+
+    setTaskComments(comments)
   };
 
-  const handleClickOpen = (commentId) => {
-    setOpenCommentId(commentId);
-  };
+  const handleCommentSave = async (index) => {
+    const comments = [...props.currentTask.Comments]
+    comments[index].IsEdited = true
+    comments[index].isEditing = false
 
-  const handleClose = () => {
-    setOpenCommentId(null);
-  };
+    setTaskComments(comments)
 
-  const handleSave = (id) => {
-    if (props.currentStory?.id) {
-      for (let i = 0; i < props.currentStory.comments.length; i++) {
-        if (props.currentStory.comments[i].id == id) {
-          props.currentStory.comments[i].text = editedText;
-          props.currentStory.comments[i].edited = true;
-        }
-      }
-    } else {
-      for (let i = 0; i < props.currentTask.comments.length; i++) {
-        if (props.currentTask.comments[i].id == id) {
-          props.currentTask.comments[i].text = editedText;
-          props.currentTask.comments[i].edited = true;
-        }
-      }
-    }
+    await axios.post('https://localhost:44365/comments/update/' + comments[index].Id, comments[index], {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
 
-    setEditingId(null); // Reset the editing state
-  };
+  } 
 
-  const handleEdit = (id) => {
-    setEditingId(id);
-    if (props.currentStory?.id) {
-      const editText = props.currentStory.comments.filter((c) => c.id == id);
-      setEditedText(editText[0].text);
-    } else {
-      const editText = props.currentTask.comments.filter((c) => c.id == id);
-      setEditedText(editText[0].text);
-    }
-  };
-
-  const handleDeleteComment = (commentId) => {
-    if (props.currentStory?.id) {
-      const updatedComments = props.currentStory.comments.filter(
-        (c) => c.id !== commentId
-      );
-      props.currentStory.comments = updatedComments;
-    } else {
-      const updatedComments = props.currentTask.comments.filter(
-        (c) => c.id !== commentId
-      );
-      props.currentTask.comments = updatedComments;
-    }
-  };
+  
 
 
   return (
     <div>
-      {comments.map((c, index) => (
+      {props.currentTask.Comments.map((c, index) => (
         <div key={index}>
-          {editingId === c.id ? (
+          {c.isEditing ? (
             <div key={c.id}>
               <FormControl
                 sx={{
@@ -130,13 +112,13 @@ export default function Comment(props) {
                   }}
                   multiline
                   rows={4}
-                  value={editedText}
-                  onChange={(e) => setEditedText(e.target.value)}
+                  value={c.Content}
+                  onChange={(e) => handleCommentChange(index, e.target.value)}
                 />
                 <Button
                   variant="contained"
                   sx={{ ml: "auto", mt: 1 }}
-                  onClick={() => handleSave(c.id)}
+                  onClick={() => handleCommentSave(index)}
                 >
                   Edit
                 </Button>
@@ -177,7 +159,7 @@ export default function Comment(props) {
                 </Box>
                 <Divider />
                 <Typography variant="body1" sx={{ mx: 1, mt: 3, mb: 3 }}>
-                  {c.text}
+                  {c.Content}
                 </Typography>
                 {c.edited === true ? (
                   <Typography
@@ -191,10 +173,10 @@ export default function Comment(props) {
                 <Divider />
 
                 <Box sx={{ textAlign: "end", color: "#0079bf", mt: 1 }}>
-                  <EditIcon sx={{ mr: 1 }} onClick={() => handleEdit(c.id)} />
+                  <EditIcon sx={{ mr: 1 }} onClick={() => handleCommentOpen(index)} />
                   <DeleteIcon
                     sx={{ mr: 1 }}
-                    onClick={() => handleClickOpen(c.id)}
+                    onClick={() => handleCommentDelete(c.id)}
                   />
                 </Box>
               </CardContent>
@@ -202,13 +184,6 @@ export default function Comment(props) {
           )}
         </div>
       ))}
-      <DeleteDialog
-        isOpen={Boolean(openCommentId)}
-        handleClickOpen={handleClickOpen}
-        handleClose={handleClose}
-        onDelete={() => handleDeleteComment(openCommentId)}
-        openCommentId={openCommentId}
-      />
     </div>
   );
 }

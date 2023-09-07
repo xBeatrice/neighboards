@@ -8,9 +8,7 @@ import Capacity from "./Capacity.jsx";
 import UsersActivity from "./UsersActivity.jsx";
 import UserStories from "./UserStories.jsx";
 //import { users as usersMock } from "./mocks/usersMock.js";
-import { iterations as iterationsHelper } from "./helpers/iterations.js";
-import { tasks as tasksMock } from "./mocks/taskBoardMock.js";
-import { userStories as stories } from "./mocks/UserStoriesMock.js";
+import { iterations } from "./mocks/iterationsMock.js";
 import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import axios from 'axios';
@@ -18,15 +16,15 @@ import axios from 'axios';
 function App({ children }) {
   const [darkMode, setDarkMode] = React.useState(false);
 
-  const [tasks, setTasks] = React.useState(tasksMock);
+  const [tasks, setTasks] = React.useState([]);
 
   const [users, setUsers] = React.useState([]);
 
-  const [userStories, setUserStories] = React.useState(stories);
+  const [userCapacityList, setUserCapacityList] = React.useState([]);
 
-  const [iterations, setIterations] = React.useState(iterationsHelper);
+  const [userStories, setUserStories] = React.useState([]);
 
-  const [currentIteration, setCurrentIteration] = React.useState(-1);
+  const [currentIteration, setCurrentIteration] = React.useState(0);
 
   const [value, setValue] = React.useState(0);
 
@@ -35,13 +33,20 @@ function App({ children }) {
     isCreating: false,
   });
 
+  const handleUserCapacityListChange = (value) => {
+     value?.forEach(x => {
+      const userCapacity = userCapacityList.find(userCapacity => userCapacity.UserId === x.UserId)
+      userCapacity.Hours = x.Hours
+     })
+  }
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const [usersResponse, tasksResponse, userStoriesResponse] = await Promise.all([
           axios.get('https://localhost:44365/users'),
           axios.get('https://localhost:44365/tasks'),
-          axios.get('https://localhost:44365/userstories'),
+          axios.get('https://localhost:44365/userstories')
         ]);
 
         setUsers(usersResponse.data);
@@ -55,17 +60,20 @@ function App({ children }) {
     fetchData();
   }, [])
 
-  const handleUsers = (newUsers) => {
-    setUsers(newUsers);
+  const handleChangeIteration = async (event) => {
+    const iterationId = event.target.value
+
+    setCurrentIteration(iterationId);
+
+    if (iterationId) {
+      const { data } = await axios.get('https://localhost:44365/capacity/get/' + iterationId)
+      setUserCapacityList(data || [])
+    }
+    else {
+      setUserCapacityList([])
+    }
   };
 
-  const handleIterations = (newIterations) => {
-    setIterations(newIterations);
-  };
-
-  const handleChangeIteration = (event) => {
-    setCurrentIteration(event.target.value);
-  };
   const [person, setPerson] = React.useState("");
 
   const handleChangePerson = (event) => {
@@ -82,7 +90,6 @@ function App({ children }) {
     if (taskDialogOptions.isCreating === true) {
       // Send a POST request to create a new task
       await axios.post(baseUrl + '/create', item, {
-       
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -169,10 +176,10 @@ function App({ children }) {
           {value === 1 ? (
             <UsersActivity
               currentIteration={currentIteration}
-              handleUsers={handleUsers}
-              handleIterations={handleIterations}
               users={users}
-              iterations={iterations}
+              setUsers={setUsers}
+              userCapacityList={userCapacityList}
+              setUserCapacityList={handleUserCapacityListChange}
             />
           ) : value === 2 ? (
             <Capacity

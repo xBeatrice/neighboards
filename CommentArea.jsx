@@ -1,44 +1,37 @@
 import * as React from "react";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import axios from "axios";
 
 export default function CommentArea(props) {
   const textareaRef = React.useRef(null);
 
   const [commentText, setCommentText] = React.useState("");
 
-  const handleButtonClick = () => {
-    if (commentText.trim() !== "") {
-      const timestamp = Date.now();
-      const id = Math.random().toString(36).substr(2, 9);
+  const handleSubmit = async () => {
+    const Id = Math.random().toString(36).substr(2, 9);
 
-      if (props.currentStory?.id) {
-        props.setCurrentStory((prevValues) => ({
-          ...prevValues,
-          comments: [
-            ...prevValues.comments,
-            { text: commentText, timestamp, id, edited: false },
-          ],
-        }));
-      } else {
-        props.setCurrentTask((prevValues) => ({
-          ...prevValues,
-          comments: [
-            ...prevValues.comments,
-            { text: commentText, timestamp, id, edited: false },
-          ],
-        }));
-      }
-      setCommentText("");
-    }
-  };
-
-  const handleSubmit = () => {
-    if (props.currentStory?.id) {
-      props.handleSaveStory(props.currentStory);
-    } else {
-      props.handleSaveTask(props.currentTask);
-    }
-  };
+    const comment = { Content: commentText, Date: Date.now(), Id, IsEdited: false, ItemId: props.currentTask.Id }
+    
+    await axios.post('https://localhost:44365/comments/create', comment, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  }).then(() => {
+    props.setCurrentTask((prevValues) => ({
+      ...prevValues,
+      Comments: [
+        ...prevValues.Comments,
+        comment,
+      ],
+    }));
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  })
+  .finally(() => {
+    setCommentText("");
+  })
+};
 
   return (
     <FormControl
@@ -62,7 +55,7 @@ export default function CommentArea(props) {
         onChange={(e) => setCommentText(e.target.value)}
         sx={{
           borderRadius: 2,
-          border: props.currentStory
+          border: !props.isTask
             ? "2px solid #096bde"
             : props.currentTask.isBug
             ? "2px solid #ff4f9b"
@@ -73,7 +66,7 @@ export default function CommentArea(props) {
       <Button
         sx={{ ml: "auto", mt: 1 }}
         variant="contained"
-        onClick={(handleSubmit, handleButtonClick)}
+        onClick={(handleSubmit)}
       >
         Post
       </Button>{" "}

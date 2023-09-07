@@ -104,7 +104,6 @@ export default function UserStories(props) {
                       ...props.taskDialogOptions,
                       isCreating: false,
                       isOpen: true,
-                      isEditing: true,
                       selectedTask: s,
                       isTask: false
                     });

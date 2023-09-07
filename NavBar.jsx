@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
-import { iterations } from "./helpers/iterations.js";
+import { iterations } from "./mocks/iterationsMock.js";
 import DarkThemeButton from "./DarkThemeButton.jsx";
 
 function NavBar(props) {
@@ -60,7 +60,7 @@ function NavBar(props) {
             label="Iteration"
             onChange={props.handleChangeIteration}
           >
-            <MenuItem value={-1} key={"-1"}>
+            <MenuItem value={0} key={"-1"}>
               all
             </MenuItem>
             {iterations.map((i) => (

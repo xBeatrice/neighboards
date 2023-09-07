@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { states } from "./constants/states.js";
-import { iterations } from "./helpers/iterations.js";
+import { iterations } from "./mocks/iterationsMock.js";
 
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -369,7 +369,7 @@ function TaskDialog(props) {
                       onChange={handleTaskChange}
                     >
                       {props.userStories.map((s) => (
-                        <MenuItem key={s.Id} value={s}>
+                        <MenuItem key={s.Id} value={s.Id}>
                           {s.Title}
                         </MenuItem>
                       ))}
@@ -394,13 +394,12 @@ function TaskDialog(props) {
           <div></div>
         ) : (
           <div>
-            {/* <CommentArea
+            <CommentArea
               currentTask={currentTask}
-              handleTaskChange={handleTaskChange}
-              handleSaveTask={handleSaveTask}
               setCurrentTask={setCurrentTask}
+              isTask={props.isTask}
             />
-            <Comment currentTask={currentTask} /> */}
+            <Comment currentTask={currentTask} setCurrentTask={setCurrentTask}/>
           </div>
         )}
         <DeleteDialog
